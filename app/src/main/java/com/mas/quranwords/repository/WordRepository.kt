@@ -8,15 +8,31 @@ class WordRepository(
 ) {
 
     suspend fun getWords(): Result<List<WordItem>> {
-
         return try {
-
             Result.success(
                 apiService.getWords().words
             )
-
         } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
+    suspend fun getMemorizeWords(): Result<List<WordItem>> {
+        return try {
+            Result.success(
+                apiService.getMemorize().words
+            )
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getMistakes(): Result<List<WordItem>> {
+        return try {
+            Result.success(
+                apiService.getMistakes().words
+            )
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }

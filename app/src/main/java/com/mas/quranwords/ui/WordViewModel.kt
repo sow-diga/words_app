@@ -29,8 +29,39 @@ class WordViewModel : ViewModel() {
                 }
                 .onFailure { exception ->
                     _isLoading.value = false
-                    _errorMessage.value =
-                        exception.message ?: "Unknown error"
+                    _errorMessage.value = exception.message ?: "Unknown error"
+                }
+        }
+    }
+
+    fun fetchMemorizeWords() {
+
+        viewModelScope.launch {
+            _isLoading.value = true
+            repository.getMemorizeWords()
+                .onSuccess { words ->
+                    _words.value = words
+                    _isLoading.value = false
+                }
+                .onFailure { exception ->
+                    _isLoading.value = false
+                    _errorMessage.value = exception.message ?: "Unknown error"
+                }
+        }
+    }
+
+    fun fetchMistakes() {
+
+        viewModelScope.launch {
+            _isLoading.value = true
+            repository.getMistakes()
+                .onSuccess { words ->
+                    _words.value = words
+                    _isLoading.value = false
+                }
+                .onFailure { exception ->
+                    _isLoading.value = false
+                    _errorMessage.value = exception.message ?: "Unknown error"
                 }
         }
     }
