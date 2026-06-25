@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <!-- 1. The Quran Word Display -->
+    <TextView
+        android:id="@+id/detailWordTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="#000000"
+        android:textSize="48sp"
+        android:lineSpacingExtra="8dp"
+        android:fontFamily="@font/amiriregular"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 2. The Visual Image Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/imageCardView"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="15dp"
+        android:background="#F5F5F5"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
+        app:cardPreventCornerOverlap="false"
+        app:layout_constraintTop_toBottomOf="@id/detailWordTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/detailImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitStart"
+            android:background="#FFFFFF" />
+
+    </androidx.cardview.widget.CardView>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/reciterDropdownLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:boxBackgroundMode="outline"
+        app:endIconMode="dropdown_menu"
+        app:startIconDrawable="@android:drawable/ic_btn_speak_now"
+        app:startIconTint="@color/primary"
+        android:theme="@style/Theme.Material3.DayNight.NoActionBar"
+        app:layout_constraintTop_toBottomOf="@id/imageCardView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/reciterDropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:focusable="false"
+            android:popupBackground="@color/surface"
+            android:textColor="@color/primary"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- 3. Audio Playback Button -->
+    <Button
+        android:id="@+id/playAudioButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Play Audio"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reciterDropdownLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
