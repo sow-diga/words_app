@@ -36,4 +36,14 @@ class WordRepository(
             Result.failure(e)
         }
     }
+
+    suspend fun getAyah(): Result<List<WordItem>> {
+        return try {
+            Result.success(
+                apiService.getAyah().words
+            )
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

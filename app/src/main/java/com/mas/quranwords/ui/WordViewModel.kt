@@ -65,4 +65,20 @@ class WordViewModel : ViewModel() {
                 }
         }
     }
+
+    fun fetchAyah() {
+
+        viewModelScope.launch {
+            _isLoading.value = true
+            repository.getAyah()
+                .onSuccess { words ->
+                    _words.value = words
+                    _isLoading.value = false
+                }
+                .onFailure { exception ->
+                    _isLoading.value = false
+                    _errorMessage.value = exception.message ?: "Unknown error"
+                }
+        }
+    }
 }

@@ -11,4 +11,7 @@ interface WordApiService {
 
     @GET("words/mistake.json")
     suspend fun getMistakes(): WordResponse
+
+    @GET("words/ayah.json")
+    suspend fun getAyah(): WordResponse
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mas.quranwords.R
 import com.mas.quranwords.databinding.FragmentListBinding
+import com.mas.quranwords.domain.ItemTypeResolver
 import com.mas.quranwords.models.ItemType
 import com.mas.quranwords.ui.adapter.WordAdapter
 import com.mas.quranwords.util.EXTRA_TYPE
@@ -40,12 +41,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
                 ?: ItemType.WORD.name
         )
 
-        when (itemType) {
-            ItemType.WORD -> viewModel.fetchWords()
-            ItemType.MEMORIZE -> viewModel.fetchMemorizeWords()
-            ItemType.MISTAKE -> viewModel.fetchMistakes()
-            ItemType.NUMBERS -> {}
-        }
+        ItemTypeResolver.execute(itemType, viewModel)
     }
 
     private fun setupRecyclerView() {

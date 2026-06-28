@@ -2,7 +2,6 @@ package com.mas.quranwords.ui
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -18,8 +17,6 @@ import com.mas.quranwords.util.EXTRA_TYPE
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: WordAdapter
-
-    private val viewModel: WordViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +55,7 @@ class MainActivity : AppCompatActivity() {
             Category("Difficult Words", ItemType.WORD),
             Category("Memorizing", ItemType.MEMORIZE),
             Category("Mistakes", ItemType.MISTAKE),
+            Category("Ayah to work on", ItemType.AYAH),
             Category("Numbers", ItemType.NUMBERS)
         )
     }

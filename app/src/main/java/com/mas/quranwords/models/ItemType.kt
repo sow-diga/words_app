@@ -4,5 +4,6 @@ enum class ItemType {
     WORD,
     MEMORIZE,
     MISTAKE,
+    AYAH,
     NUMBERS
 }
