@@ -4,8 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mas.quranwords.R
 import com.mas.quranwords.databinding.ActivityMainBinding
 import com.mas.quranwords.models.Category
 import com.mas.quranwords.models.ItemType
@@ -32,9 +34,11 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
 
             recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
-            recyclerView.addItemDecoration(
-                DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL)
-            )
+            val divider = DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL)
+            ContextCompat.getDrawable(this@MainActivity, R.drawable.recycler_divider)?.let {
+                divider.setDrawable(it)
+            }
+            binding.recyclerView.addItemDecoration(divider)
 
             val categories = loadCategories()
             val adapter = CategoryAdapter(categories) { category ->
@@ -53,7 +57,8 @@ class MainActivity : AppCompatActivity() {
         return listOf(
             Category("Difficult Words", ItemType.WORD),
             Category("Memorizing", ItemType.MEMORIZE),
-            Category("Mistakes", ItemType.MISTAKE)
+            Category("Mistakes", ItemType.MISTAKE),
+            Category("Numbers", ItemType.NUMBERS)
         )
     }
 

@@ -1,0 +1,112 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical"
+    android:background="#F4F4F5">
+
+
+    <!-- MODE SELECT -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Learning Mode"
+        android:textColor="@color/on_primary_container"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:padding="8dp"/>
+
+    <RadioGroup
+        android:id="@+id/modeGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <RadioButton
+            android:id="@+id/easyMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/on_primary_container"
+            android:text="Easy"/>
+
+        <RadioButton
+            android:id="@+id/mediumMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Medium"
+            android:textColor="@color/on_primary_container"
+            android:checked="true"/>
+
+        <RadioButton
+            android:id="@+id/hardMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/on_primary_container"
+            android:text="Hard"/>
+    </RadioGroup>
+
+    <!-- NEW / REPEAT -->
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/newBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="5dp"
+            android:text="New 🔊"/>
+
+        <Button
+            android:id="@+id/repeatBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="5dp"
+            android:text="Repeat 🔄"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <!-- INPUT -->
+    <EditText
+        android:id="@+id/answerInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter number"
+        android:inputType="number"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:layout_marginTop="12dp"/>
+
+    <!-- CHECK -->
+    <Button
+        android:id="@+id/checkBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        android:text="Check Answer ✓"/>
+    <TextView
+        android:id="@+id/scoreText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Score: 0 | Streak: 0"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:textColor="@color/grey"
+        android:padding="8dp"/>
+    <!-- FEEDBACK -->
+    <TextView
+        android:id="@+id/feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:visibility="gone"/>
+
+</LinearLayout>

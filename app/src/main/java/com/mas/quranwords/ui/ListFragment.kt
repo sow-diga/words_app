@@ -2,6 +2,7 @@ package com.mas.quranwords.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -43,6 +44,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
             ItemType.WORD -> viewModel.fetchWords()
             ItemType.MEMORIZE -> viewModel.fetchMemorizeWords()
             ItemType.MISTAKE -> viewModel.fetchMistakes()
+            ItemType.NUMBERS -> {}
         }
     }
 
@@ -51,12 +53,11 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         binding.recyclerView.layoutManager =
             LinearLayoutManager(requireContext())
 
-        binding.recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
-        )
+        val divider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        ContextCompat.getDrawable(requireContext(), R.drawable.recycler_divider)?.let {
+            divider.setDrawable(it)
+        }
+        binding.recyclerView.addItemDecoration(divider)
 
         adapter = WordAdapter { word ->
 
