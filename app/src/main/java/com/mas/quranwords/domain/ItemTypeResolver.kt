@@ -7,10 +7,12 @@ object ItemTypeResolver {
 
     fun execute(itemType: ItemType, viewModel: WordViewModel) {
         when (itemType) {
-            ItemType.WORD -> viewModel.fetchWords()
-            ItemType.MEMORIZE -> viewModel.fetchMemorizeWords()
-            ItemType.MISTAKE -> viewModel.fetchMistakes()
-            ItemType.AYAH -> viewModel.fetchAyah()
+            ItemType.WORD,
+            ItemType.MEMORIZE,
+            ItemType.MISTAKE,
+            ItemType.AYAH  -> {
+                viewModel.fetchWords(itemType)
+            }
             ItemType.NUMBERS -> Unit
         }
     }

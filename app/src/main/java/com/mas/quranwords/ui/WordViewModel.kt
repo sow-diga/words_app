@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mas.quranwords.models.ItemType
 import com.mas.quranwords.models.WordItem
 import com.mas.quranwords.network.RetrofitClient
 import com.mas.quranwords.repository.WordRepository
@@ -18,67 +19,34 @@ class WordViewModel : ViewModel() {
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    fun fetchWords() {
+    private fun loadWords(
+        request: suspend () -> Result<List<WordItem>>
+    ) {
 
         viewModelScope.launch {
+
             _isLoading.value = true
-            repository.getWords()
-                .onSuccess { words ->
-                    _words.value = words
-                    _isLoading.value = false
+
+            request()
+                .onSuccess {
+                    _words.value = it
                 }
-                .onFailure { exception ->
-                    _isLoading.value = false
-                    _errorMessage.value = exception.message ?: "Unknown error"
+                .onFailure {
+                    _errorMessage.value = it.message ?: "Unknown error"
                 }
+
+            _isLoading.value = false
         }
     }
-
-    fun fetchMemorizeWords() {
-
-        viewModelScope.launch {
-            _isLoading.value = true
-            repository.getMemorizeWords()
-                .onSuccess { words ->
-                    _words.value = words
-                    _isLoading.value = false
-                }
-                .onFailure { exception ->
-                    _isLoading.value = false
-                    _errorMessage.value = exception.message ?: "Unknown error"
-                }
-        }
-    }
-
-    fun fetchMistakes() {
-
-        viewModelScope.launch {
-            _isLoading.value = true
-            repository.getMistakes()
-                .onSuccess { words ->
-                    _words.value = words
-                    _isLoading.value = false
-                }
-                .onFailure { exception ->
-                    _isLoading.value = false
-                    _errorMessage.value = exception.message ?: "Unknown error"
-                }
-        }
-    }
-
-    fun fetchAyah() {
-
-        viewModelScope.launch {
-            _isLoading.value = true
-            repository.getAyah()
-                .onSuccess { words ->
-                    _words.value = words
-                    _isLoading.value = false
-                }
-                .onFailure { exception ->
-                    _isLoading.value = false
-                    _errorMessage.value = exception.message ?: "Unknown error"
-                }
+    fun fetchWords(type: ItemType) {
+        loadWords {
+            when(type) {
+                ItemType.WORD -> repository.getWords()
+                ItemType.MEMORIZE -> repository.getMemorizeWords()
+                ItemType.MISTAKE -> repository.getMistakes()
+                ItemType.AYAH -> repository.getAyah()
+                else -> Result.success(emptyList())
+            }
         }
     }
 }
