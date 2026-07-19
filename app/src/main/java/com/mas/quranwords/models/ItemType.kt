@@ -5,5 +5,6 @@ enum class ItemType {
     MEMORIZE,
     MISTAKE,
     AYAH,
+    REPAIR,
     NUMBERS
 }

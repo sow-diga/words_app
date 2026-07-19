@@ -10,6 +10,7 @@ object ItemTypeResolver {
             ItemType.WORD,
             ItemType.MEMORIZE,
             ItemType.MISTAKE,
+            ItemType.REPAIR,
             ItemType.AYAH  -> {
                 viewModel.fetchWords(itemType)
             }

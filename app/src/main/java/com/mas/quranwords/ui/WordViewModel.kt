@@ -19,12 +19,8 @@ class WordViewModel : ViewModel() {
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private fun loadWords(
-        request: suspend () -> Result<List<WordItem>>
-    ) {
-
+    private fun loadWords(request: suspend () -> Result<List<WordItem>>) {
         viewModelScope.launch {
-
             _isLoading.value = true
 
             request()
@@ -34,10 +30,10 @@ class WordViewModel : ViewModel() {
                 .onFailure {
                     _errorMessage.value = it.message ?: "Unknown error"
                 }
-
             _isLoading.value = false
         }
     }
+
     fun fetchWords(type: ItemType) {
         loadWords {
             when(type) {
@@ -45,6 +41,7 @@ class WordViewModel : ViewModel() {
                 ItemType.MEMORIZE -> repository.getMemorizeWords()
                 ItemType.MISTAKE -> repository.getMistakes()
                 ItemType.AYAH -> repository.getAyah()
+                ItemType.REPAIR -> repository.getRepair()
                 else -> Result.success(emptyList())
             }
         }

@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
             Category("Memorizing", ItemType.MEMORIZE),
             Category("Mistakes", ItemType.MISTAKE),
             Category("Ayah to work on", ItemType.AYAH),
+            Category("Fix a Surah", ItemType.REPAIR),
             Category("Numbers", ItemType.NUMBERS)
         )
     }

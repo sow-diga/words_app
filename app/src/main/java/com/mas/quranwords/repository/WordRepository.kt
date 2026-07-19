@@ -26,8 +26,12 @@ class WordRepository(
     suspend fun getMistakes() = safeCall {
             apiService.getMistakes().words
         }
-    
+
     suspend fun getAyah() = safeCall {
             apiService.getAyah().words
         }
+
+    suspend fun getRepair() = safeCall {
+        apiService.getRepair().words
+    }
 }
