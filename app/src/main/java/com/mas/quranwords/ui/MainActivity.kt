@@ -1,20 +1,22 @@
 package com.mas.quranwords.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mas.quranwords.R
 import com.mas.quranwords.databinding.ActivityMainBinding
+import com.mas.quranwords.models.Category
+import com.mas.quranwords.models.ItemType
+import com.mas.quranwords.ui.adapter.CategoryAdapter
 import com.mas.quranwords.ui.adapter.WordAdapter
-import com.mas.quranwords.util.EXTRA_WORD
+import com.mas.quranwords.util.EXTRA_TYPE
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: WordAdapter
-
-    private val viewModel: WordViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,35 +24,41 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupRecyclerView()
-        observeData()
-
-        viewModel.fetchWords()
     }
 
 
     private fun setupRecyclerView() {
         binding.apply {
+
             recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
-            recyclerView.addItemDecoration(
-                DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL)
-            )
-            adapter =  WordAdapter { word ->
-                val intent = Intent(this@MainActivity, WordActivity::class.java)
-                intent.putExtra(EXTRA_WORD, word)
+            val divider = DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL)
+            ContextCompat.getDrawable(this@MainActivity, R.drawable.recycler_divider)?.let {
+                divider.setDrawable(it)
+            }
+            binding.recyclerView.addItemDecoration(divider)
+
+            val categories = loadCategories()
+            val adapter = CategoryAdapter(categories) { category ->
+
+                val intent = Intent(this@MainActivity, DetailActivity::class.java)
+
+                intent.putExtra(EXTRA_TYPE, category.type.name)
+
                 startActivity(intent)
             }
             recyclerView.adapter = adapter
         }
     }
 
-    private fun observeData() {
-        viewModel.words.observe(this) { wordList ->
-            adapter.submitList(wordList)
-        }
-
-        viewModel.errorMessage.observe(this) { errorMsg ->
-
-        }
+    private fun loadCategories(): List<Category> {
+        return listOf(
+            Category("Difficult Words", ItemType.WORD),
+            Category("Memorizing", ItemType.MEMORIZE),
+            Category("Mistakes", ItemType.MISTAKE),
+            Category("Ayah to work on", ItemType.AYAH),
+            Category("Fix a Surah", ItemType.REPAIR),
+            Category("Numbers", ItemType.NUMBERS)
+        )
     }
 
 }

@@ -7,17 +7,31 @@ class WordRepository(
     private val apiService: WordApiService
 ) {
 
-    suspend fun getWords(): Result<List<WordItem>> {
-
+    private suspend fun safeCall(call: suspend () -> List<WordItem>): Result<List<WordItem>> {
         return try {
-
-            Result.success(
-                apiService.getWords().words
-            )
-
+            Result.success(call())
         } catch (e: Exception) {
-
             Result.failure(e)
         }
+    }
+
+    suspend fun getWords() = safeCall {
+            apiService.getWords().words
+        }
+
+    suspend fun getMemorizeWords() = safeCall {
+            apiService.getMemorize().words
+        }
+
+    suspend fun getMistakes() = safeCall {
+            apiService.getMistakes().words
+        }
+
+    suspend fun getAyah() = safeCall {
+            apiService.getAyah().words
+        }
+
+    suspend fun getRepair() = safeCall {
+        apiService.getRepair().words
     }
 }

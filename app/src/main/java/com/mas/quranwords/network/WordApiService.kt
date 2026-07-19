@@ -5,4 +5,16 @@ import retrofit2.http.GET
 interface WordApiService {
     @GET("words/difficult.json")
     suspend fun getWords(): WordResponse
+
+    @GET("words/memorize.json")
+    suspend fun getMemorize(): WordResponse
+
+    @GET("words/mistake.json")
+    suspend fun getMistakes(): WordResponse
+
+    @GET("words/ayah.json")
+    suspend fun getAyah(): WordResponse
+
+    @GET("words/repair.json")
+    suspend fun getRepair(): WordResponse
 }

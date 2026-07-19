@@ -4,9 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mas.quranwords.databinding.ItemWordBinding
+import com.mas.quranwords.domain.extensions.toDisplayText
 import com.mas.quranwords.models.WordItem
+import com.mas.quranwords.util.SurahNames
 
 class WordAdapter(
     private val onWordClicked: (WordItem) -> Unit
@@ -21,11 +22,10 @@ class WordAdapter(
             onWordClicked: (WordItem) -> Unit
         ) {
 
-            binding.wordTextView.text = word.word
-
-            /*Glide.with(binding.root)
-                .load(word.image)
-                .into(binding.thumbnailImageView)*/
+            binding.wordTextView.text = word.toDisplayText()
+            word.surahNumber?.let {
+                binding.surahName.text = SurahNames.getName(it)
+            }
 
             binding.root.setOnClickListener {
                 onWordClicked(word)
