@@ -2,10 +2,12 @@ package com.mas.quranwords.ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.mas.quranwords.R
+import com.mas.quranwords.audio.PlaybackSpeed
 import com.mas.quranwords.databinding.FragmentDetailBinding
 import com.mas.quranwords.models.WordItem
 import com.mas.quranwords.player.AudioPlayer
@@ -21,6 +23,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
     private var selectedReciter = Reciters.ALL.first()
+    private var selectedPlaybackSpeed = PlaybackSpeed.NORMAL
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,6 +38,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             return
         }
 
+        initUi()
         showWord(wordItem)
     }
 
@@ -47,6 +51,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             .into(binding.detailImageView)
 
         initializeReciters()
+        initializePlaybackSpeed()
 
         binding.playAudioButton.setOnClickListener {
             val audioUrl = UrlBuilder.buildAudio(selectedReciter, wordItem)
@@ -62,6 +67,22 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         val adapter = ReciterAdapter(requireContext(), Reciters.ALL)
         binding.reciterDropdown.setAdapter(adapter)
         binding.reciterDropdown.setText(selectedReciter.name, false)
+    }
+
+    private fun initializePlaybackSpeed() {
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, PlaybackSpeed.values())
+        binding.playbackSpeedDropdown.setAdapter(adapter)
+        binding.playbackSpeedDropdown.setText(selectedPlaybackSpeed.label, false)
+        binding.playbackSpeedDropdown.setOnItemClickListener { parent, _, position, _ ->
+            selectedPlaybackSpeed = parent.getItemAtPosition(position) as PlaybackSpeed
+            AudioPlayer.setSpeed(selectedPlaybackSpeed.value)
+        }
+    }
+
+    private fun initUi() {
+        binding.playLoop.setOnCheckedChangeListener { _, isChecked ->
+            AudioPlayer.setSingleLoop(isChecked)
+        }
     }
 
     override fun onDestroyView() {
