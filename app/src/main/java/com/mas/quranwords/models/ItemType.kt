@@ -6,5 +6,6 @@ enum class ItemType {
     MISTAKE,
     AYAH,
     REPAIR,
+    LOCAL,
     NUMBERS
 }

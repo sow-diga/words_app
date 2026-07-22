@@ -14,6 +14,7 @@ object ItemTypeResolver {
             ItemType.AYAH  -> {
                 viewModel.fetchWords(itemType)
             }
+            ItemType.LOCAL -> Unit
             ItemType.NUMBERS -> Unit
         }
     }
