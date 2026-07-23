@@ -12,7 +12,7 @@ import com.mas.quranwords.R
 import com.mas.quranwords.data.db.WordRecord
 import com.mas.quranwords.data.repository.LocalWordRepositoryProvider
 import com.mas.quranwords.databinding.FragmentAddWordBinding
-
+import com.mas.quranwords.navigation.NavigationArgs
 
 
 class EditWordFragment :
@@ -32,18 +32,10 @@ class EditWordFragment :
         LocalWordViewModelFactory(LocalWordRepositoryProvider.get(requireContext()))
     }
 
-
-
-    private var existingWord:
-            WordRecord? = null
-
-
+    private var existingWord: WordRecord? = null
 
     private val wordId: Long by lazy {
-
-        requireArguments()
-            .getLong("wordId")
-
+        requireArguments().getLong(NavigationArgs.WORD_ID)
     }
 
 

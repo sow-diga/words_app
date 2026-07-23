@@ -12,9 +12,9 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
 import com.mas.quranwords.R
 import com.mas.quranwords.data.db.AppDatabase
-import com.mas.quranwords.data.mapper.toWordItem
 import com.mas.quranwords.data.repository.LocalWordRepository
 import com.mas.quranwords.databinding.FragmentWordListBinding
+import com.mas.quranwords.navigation.NavigationArgs
 
 
 class WordListFragment : Fragment(R.layout.fragment_word_list) {
@@ -48,9 +48,7 @@ class WordListFragment : Fragment(R.layout.fragment_word_list) {
         adapter = LocalWordAdapter { word ->
             findNavController().navigate(
                     R.id.localDetailFragment,
-                    bundleOf(
-                        "wordId" to word.id
-                    )
+                    bundleOf(NavigationArgs.WORD_ID to word.id)
                 )
         }
 

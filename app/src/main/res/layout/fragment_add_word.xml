@@ -1,43 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:orientation="vertical"
         android:padding="16dp">
 
 
         <!-- Arabic Word -->
-
         <com.google.android.material.textfield.TextInputLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:hint="Arabic Word">
 
-
             <com.google.android.material.textfield.TextInputEditText
-
                 android:id="@+id/wordInput"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:textSize="24sp"
-
+                android:textColor="@color/on_primary_container"
                 android:gravity="right"/>
-
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -45,173 +32,101 @@
         <!-- English -->
 
         <com.google.android.material.textfield.TextInputLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_marginTop="8dp"
-
             android:hint="English Meaning">
 
-
             <com.google.android.material.textfield.TextInputEditText
-
                 android:id="@+id/englishInput"
-
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
+                android:layout_height="wrap_content"
+                android:textColor="@color/on_primary_container"/>
         </com.google.android.material.textfield.TextInputLayout>
-
-
 
         <!-- Surah -->
-
         <com.google.android.material.textfield.TextInputLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_marginTop="8dp"
-
             android:hint="Surah Number">
 
-
             <com.google.android.material.textfield.TextInputEditText
-
                 android:id="@+id/surahInput"
-
                 android:inputType="number"
-
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
+                android:layout_height="wrap_content"
+                android:textColor="@color/on_primary_container"/>
         </com.google.android.material.textfield.TextInputLayout>
-
-
 
         <!-- Ayah -->
-
         <com.google.android.material.textfield.TextInputLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_marginTop="8dp"
-
             android:hint="Ayah Number">
 
-
             <com.google.android.material.textfield.TextInputEditText
-
                 android:id="@+id/ayahInput"
-
                 android:inputType="number"
-
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
+                android:layout_height="wrap_content"
+                android:textColor="@color/on_primary_container"/>
         </com.google.android.material.textfield.TextInputLayout>
-
-
 
         <!-- Word Position -->
-
         <com.google.android.material.textfield.TextInputLayout
-
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content"
-
             android:layout_marginTop="8dp"
-
             android:hint="Word Position">
 
-
             <com.google.android.material.textfield.TextInputEditText
-
                 android:id="@+id/positionInput"
-
                 android:inputType="number"
-
                 android:layout_width="match_parent"
-
-                android:layout_height="wrap_content"/>
-
+                android:layout_height="wrap_content"
+                android:textColor="@color/on_primary_container"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-
-
         <!-- Category Dropdown -->
-
         <AutoCompleteTextView
-
             android:id="@+id/categoryDropdown"
-
             android:layout_width="match_parent"
-
             android:layout_height="50dp"
-
             android:layout_marginTop="12dp"
-
             android:hint="Category"/>
 
-
-
         <!-- Level Dropdown -->
-
         <AutoCompleteTextView
-
             android:id="@+id/levelDropdown"
-
             android:layout_width="match_parent"
-
             android:layout_height="50dp"
-
             android:layout_marginTop="12dp"
-
             android:hint="Level"/>
 
 
 
         <!-- Comment -->
-
         <com.google.android.material.textfield.TextInputLayout
-
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content"
-
             android:layout_marginTop="8dp"
-
             android:hint="Comment">
 
-
             <com.google.android.material.textfield.TextInputEditText
-
                 android:id="@+id/commentInput"
-
                 android:layout_width="match_parent"
-
-                android:layout_height="wrap_content"/>
-
+                android:layout_height="wrap_content"
+                android:textColor="@color/on_primary_container"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-
-
         <Button
-
             android:id="@+id/saveButton"
-
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content"
-
             android:layout_marginTop="24dp"
-
             android:text="Save Word"/>
-
-
     </LinearLayout>
 
 
