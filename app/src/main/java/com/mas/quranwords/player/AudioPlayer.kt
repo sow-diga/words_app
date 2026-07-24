@@ -1,8 +1,10 @@
 package com.mas.quranwords.player
 
 import android.content.Context
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.RawRes
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -54,6 +56,19 @@ object AudioPlayer {
             setMediaItems(mediaItems)
             prepare()
             setPlaybackSpeed(playbackSpeed)
+            play()
+        }
+    }
+
+    fun playAssetAudio(context: Context, fileName: String) {
+        currentUrl = null
+
+        val assetUri = Uri.parse("asset:///$fileName")
+        player?.apply {
+            repeatMode = Player.REPEAT_MODE_OFF
+            setMediaItem(MediaItem.fromUri(assetUri))
+            prepare()
+            setPlaybackSpeed(1.0f)
             play()
         }
     }

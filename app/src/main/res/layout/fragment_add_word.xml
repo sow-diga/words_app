@@ -127,6 +127,27 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Save Word"/>
+
+        <Button
+            android:id="@+id/loadAyahButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@android:drawable/stat_sys_download"/>
+
+        <TextView
+            android:id="@+id/ayahText"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:padding="12dp"
+
+            android:textSize="24sp"
+
+            android:textDirection="rtl"
+
+            android:lineSpacingExtra="10dp"/>
     </LinearLayout>
 
 

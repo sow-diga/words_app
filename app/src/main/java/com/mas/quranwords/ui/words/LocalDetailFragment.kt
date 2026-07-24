@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -18,7 +19,10 @@ import com.mas.quranwords.data.repository.LocalWordRepositoryProvider
 import com.mas.quranwords.databinding.FragmentLocalDetailBinding
 import com.mas.quranwords.navigation.NavigationArgs
 import com.mas.quranwords.player.AudioPlayer
+import com.mas.quranwords.ui.mapper.renderState
+import com.mas.quranwords.util.TaskProgressTracker
 import com.mas.quranwords.util.UrlBuilder
+import com.mas.quranwords.util.triggerSuccessVibration
 
 class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
     private var _binding: FragmentLocalDetailBinding? = null
@@ -38,6 +42,8 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
     private var currentWord: WordRecord? = null
     private var selectedPlaybackSpeed = PlaybackSpeed.NORMAL
     private var audioMode = AudioMode.WORD
+    private var editHide = false
+    private val progressTracker = TaskProgressTracker(maxListen = 5, maxRepeat = 10)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,6 +52,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
         loadWord()
         setupButtons()
+        setupTracker()
         initUi()
     }
 
@@ -103,6 +110,28 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
                 AudioPlayer.play(UrlBuilder.buildLocalAudio(audioMode, it))
             }
         }
+
+        binding.navigationButton.setOnClickListener {
+            editLayoutControl()
+        }
+    }
+
+    private fun setupTracker() {
+        binding.taskProgressLayout.renderState(progressTracker.state, animate = false)
+        binding.root.setOnClickListener {
+            val wasPhase1Complete = progressTracker.state.isPhase1Complete
+            val newState = progressTracker.registerTap()
+            binding.taskProgressLayout.renderState(newState, animate = true)
+
+            if (!wasPhase1Complete && newState.isPhase1Complete) {
+                triggerSuccessVibration(requireContext())
+            }
+
+            if (newState.isFullyComplete) {
+                AudioPlayer.playAssetAudio(requireContext(), "success_chime.mp3")
+                triggerSuccessVibration(requireContext())
+            }
+        }
     }
 
     private fun initUi() {
@@ -111,6 +140,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
         }
 
         initializePlaybackSpeed()
+        editLayoutControl()
     }
 
     private fun initializePlaybackSpeed() {
@@ -135,6 +165,20 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
             }
             .show()
     }
+
+    private fun editLayoutControl() {
+        binding.apply {
+            deleteButton.isVisible = editHide
+            editButton.isVisible = editHide
+            if (editHide) {
+                navigationButton.setBackgroundResource(android.R.drawable.ic_menu_send)
+            } else {
+                navigationButton.setBackgroundResource(android.R.drawable.ic_menu_view)
+            }
+        }
+        editHide = !editHide
+    }
+
 
     override fun onDestroyView() {
         _binding = null

@@ -9,12 +9,19 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 
 import com.mas.quranwords.R
+import com.mas.quranwords.data.QuranRepository
 import com.mas.quranwords.data.db.AppDatabase
 import com.mas.quranwords.data.db.WordCategory
 import com.mas.quranwords.data.db.WordLevel
 import com.mas.quranwords.data.db.WordRecord
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import androidx.lifecycle.lifecycleScope
 import com.mas.quranwords.data.repository.LocalWordRepository
 import com.mas.quranwords.databinding.FragmentAddWordBinding
+import kotlinx.coroutines.launch
 
 
 class AddWordFragment :
@@ -46,7 +53,9 @@ class AddWordFragment :
     private var level =
         WordLevel.MEDIUM
 
+    private var currentVerse:String? = ""
 
+    private var currentWords = emptyList<String>()
 
     override fun onViewCreated(
         view: View,
@@ -217,8 +226,88 @@ class AddWordFragment :
             findNavController()
                 .popBackStack()
         }
+
+        binding.loadAyahButton.setOnClickListener {
+
+            val surah =
+                binding.surahInput.text.toString().toIntOrNull()
+
+            val ayah =
+                binding.ayahInput.text.toString().toIntOrNull()
+
+            if (surah == null || ayah == null)
+                return@setOnClickListener
+
+            lifecycleScope.launch {
+
+                currentVerse =
+                    QuranRepository.getVerseText(surah, ayah)
+
+                currentVerse?.let {
+                    currentWords =
+                        it.split(" ")
+                }
+
+
+                showVerse()
+            }
+        }
     }
 
+    private fun showVerse() {
+
+        val spannable =
+            SpannableString(currentVerse)
+
+        var start = 0
+
+        currentWords.forEachIndexed { index, word ->
+
+            val end = start + word.length
+
+            spannable.setSpan(
+
+                object : ClickableSpan() {
+
+                    override fun onClick(widget: View) {
+
+                        selectWord(
+                            index,
+                            word
+                        )
+
+                    }
+
+                },
+
+                start,
+                end,
+
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+
+            )
+
+            start = end + 1
+        }
+
+        binding.ayahText.text = spannable
+
+        binding.ayahText.movementMethod =
+            LinkMovementMethod.getInstance()
+    }
+
+    private fun selectWord(
+        position: Int,
+        word: String
+    ) {
+
+        binding.wordInput.setText(word)
+
+        binding.positionInput.setText(
+            (position + 1).toString()
+        )
+
+    }
 
 
     override fun onDestroyView() {

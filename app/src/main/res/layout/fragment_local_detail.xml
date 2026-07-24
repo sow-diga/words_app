@@ -2,12 +2,12 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp">
@@ -93,16 +93,19 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/margin_top"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/commentCard">
 
-            <com.google.android.material.divider.MaterialDivider
+            <!-- Divider -->
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginVertical="5dp"/>
+                android:layout_marginVertical="5dp"
+                android:background="#E0E0E0" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -202,6 +205,13 @@
                 android:layout_height="1dp"
                 android:layout_marginVertical="5dp"/>
 
+            <include
+                android:id="@+id/taskProgressLayout"
+                layout="@layout/layout_task_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -229,6 +239,12 @@
                     android:minHeight="0dp"
                     android:padding="4dp"
                     android:drawableEnd="@android:drawable/ic_menu_edit" />
+
+                <Button
+                    android:id="@+id/navigationButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@android:drawable/ic_menu_view" />
             </LinearLayout>
 
         </LinearLayout>
