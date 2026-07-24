@@ -54,6 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Listen"
+                android:textColor="@color/textColor"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -92,6 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Repeat"
+                android:textColor="@color/textColor"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 

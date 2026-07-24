@@ -133,7 +133,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:background="@android:drawable/stat_sys_download"/>
+            android:text="Load"/>
 
         <TextView
             android:id="@+id/ayahText"
