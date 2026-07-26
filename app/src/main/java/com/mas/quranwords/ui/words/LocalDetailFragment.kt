@@ -17,9 +17,15 @@ import com.mas.quranwords.data.QuranRepository
 import com.mas.quranwords.data.db.WordRecord
 import com.mas.quranwords.data.repository.LocalWordRepositoryProvider
 import com.mas.quranwords.databinding.FragmentLocalDetailBinding
+import com.mas.quranwords.domain.extensions.showIfNotBlank
+import com.mas.quranwords.models.PlayerMode
 import com.mas.quranwords.navigation.NavigationArgs
 import com.mas.quranwords.player.AudioPlayer
+import com.mas.quranwords.qari.Reciter
+import com.mas.quranwords.qari.Reciters
+import com.mas.quranwords.ui.adapter.ReciterAdapter
 import com.mas.quranwords.ui.mapper.renderState
+import com.mas.quranwords.util.Preferences
 import com.mas.quranwords.util.TaskProgressTracker
 import com.mas.quranwords.util.UrlBuilder
 import com.mas.quranwords.util.triggerSuccessVibration
@@ -41,9 +47,10 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
     private var currentWord: WordRecord? = null
     private var selectedPlaybackSpeed = PlaybackSpeed.NORMAL
-    private var audioMode = AudioMode.WORD
     private var editHide = false
     private val progressTracker = TaskProgressTracker(maxListen = 5, maxRepeat = 10)
+    private var selectedReciter = Reciters.RECITERS_ONLY.first()
+    private var playerMode = PlayerMode.PRACTICE
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,8 +79,8 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
     private fun updateUi(word: WordRecord) {
         binding.apply {
             detailWordTextView.text = word.word
-            detailEnglishTextView.text = word.english
-            detailCommentTextView.text = word.comment
+            detailEnglishTextView.showIfNotBlank(word.english)
+            detailCommentTextView.showIfNotBlank(word.comment)
             val surahName = QuranRepository.getSurahName(word.surahNumber)
             detailSurahTextView.text = "${surahName}: ${word.ayahNumber}"
             detailAyahTextView.text = QuranRepository.getVerseText(word.surahNumber, word.ayahNumber)
@@ -97,22 +104,45 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
         binding.audioModeGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
-            audioMode = when (checkedId) {
-                R.id.wordAudioButton -> AudioMode.WORD
-                R.id.suwaidButton -> AudioMode.SUWAID
-                R.id.husaryButton -> AudioMode.HUSARY
-                else -> AudioMode.WORD
+            selectedReciter = when (checkedId) {
+                R.id.wordAudioButton -> Reciters.WORD_ONLY
+                R.id.suwaidButton -> Reciters.AYMAN_SUWAID
+                R.id.husaryButton -> Reciters.HUSARY
+                else -> Reciters.WORD_ONLY
             }
         }
 
         binding.playAudioButton.setOnClickListener {
-            currentWord?.let {
-                AudioPlayer.play(UrlBuilder.buildLocalAudio(audioMode, it))
+            currentWord?.let { word ->
+                AudioPlayer.play(UrlBuilder.buildAudio(word, selectedReciter))
             }
         }
 
         binding.navigationButton.setOnClickListener {
             editLayoutControl()
+        }
+
+        binding.modeGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked) return@addOnButtonCheckedListener
+
+            when (checkedId) {
+                R.id.studyModeButton -> {
+                    playerMode = PlayerMode.PRACTICE
+                    Preferences.savePlayerMode(requireContext(), playerMode)
+                    binding.audioModeGroup.isVisible = true
+                    binding.reciterDropdownLayout.isVisible = false
+                }
+                R.id.listenModeButton -> {
+                    playerMode = PlayerMode.LISTEN
+                    Preferences.savePlayerMode(requireContext(), playerMode)
+                    binding.audioModeGroup.isVisible = false
+                    binding.reciterDropdownLayout.isVisible = true
+                }
+            }
+        }
+
+        binding.reciterDropdown.setOnItemClickListener { parent, _, position, _ ->
+            selectedReciter = parent.getItemAtPosition(position) as Reciter
         }
     }
 
@@ -139,8 +169,10 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
             AudioPlayer.setSingleLoop(isChecked)
         }
 
+        initializeReciters()
         initializePlaybackSpeed()
         editLayoutControl()
+        initPlayerMode()
     }
 
     private fun initializePlaybackSpeed() {
@@ -152,6 +184,13 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
             AudioPlayer.setSpeed(selectedPlaybackSpeed.value)
         }
     }
+
+    private fun initializeReciters() {
+        val adapter = ReciterAdapter(requireContext(), Reciters.RECITERS_ONLY)
+        binding.reciterDropdown.setAdapter(adapter)
+        binding.reciterDropdown.setText(selectedReciter.name, false)
+    }
+
     private fun showDeleteDialog() {
         val word = currentWord ?: return
 
@@ -177,6 +216,16 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
             }
         }
         editHide = !editHide
+    }
+
+    private fun initPlayerMode() {
+        playerMode = Preferences.getPlayerMode(requireContext())
+        binding.modeGroup.check(
+            when (playerMode) {
+                PlayerMode.PRACTICE -> R.id.studyModeButton
+                PlayerMode.LISTEN -> R.id.listenModeButton
+            }
+        )
     }
 
 

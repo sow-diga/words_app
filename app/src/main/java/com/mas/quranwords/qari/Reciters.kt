@@ -15,4 +15,12 @@ object Reciters {
         Reciter("Al Banna", "mahmoud_ali_al_banna_32kbps"),
         Reciter("Abdullah Basfar", "Abdullah_Basfar_192kbps")
     )
+
+    val RECITERS_ONLY = ALL.filter { it.folder != null }
+
+    val LEARNING = listOf(
+        WORD_ONLY,
+        AYMAN_SUWAID,
+        HUSARY
+    )
 }

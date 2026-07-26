@@ -56,18 +56,13 @@ object UrlBuilder {
         return "https://audio.qurancdn.com/wbw/${surah}_${ayah}_${position}.mp3"
     }
 
-    fun buildAyahAudio(word: WordRecord, reciter: Reciter = Reciters.AYMAN_SUWAID): String {
+    fun buildAudio(word: WordRecord, reciter: Reciter = Reciters.AYMAN_SUWAID): String {
+        if (reciter.isWordOnly) {
+            return buildWordAudio(word)
+        }
         val surah = word.surahNumber.toString().padStart(3, '0')
         val ayah = word.ayahNumber.toString().padStart(3, '0')
         return "https://everyayah.com/data/${reciter.folder}/$surah$ayah.mp3"
-    }
-
-    fun buildLocalAudio(mode: AudioMode, word: WordRecord): String {
-        return when (mode) {
-            AudioMode.WORD -> buildWordAudio(word)
-            AudioMode.SUWAID -> buildAyahAudio(word, Reciters.AYMAN_SUWAID)
-            AudioMode.HUSARY -> buildAyahAudio(word, Reciters.HUSARY)
-        }
     }
 
     fun buildImage(

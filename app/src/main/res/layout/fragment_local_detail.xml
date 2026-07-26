@@ -31,7 +31,6 @@
             android:id="@+id/detailEnglishTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_top"
             android:gravity="center"
             android:text="and flared"
             android:textColor="@color/primary"
@@ -60,8 +59,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_top"
             android:textColor="@color/black"
-            android:textStyle="bold"
             android:textSize="30sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/detailSurahTextView" />
@@ -106,45 +105,96 @@
                 android:layout_marginVertical="5dp"
                 android:background="#E0E0E0" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="5dp"
-                android:text="🔊 Audio"
-                android:textColor="@color/textColor"/>
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
+                    android:text="🔊 Audio"
+                    android:textColor="@color/textColor" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/modeGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/studyModeButton"
+                        style="@style/QuranWords.ToggleButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Practice" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/listenModeButton"
+                        style="@style/QuranWords.ToggleButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Listen" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/audioModeGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:singleSelection="true"
-                app:selectionRequired="true">
+                app:selectionRequired="true"
+                app:singleSelection="true">
 
                 <com.google.android.material.button.MaterialButton
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/wordAudioButton"
-                    android:textColor="@color/textColor"
-                    android:text="Word"/>
-
-                <com.google.android.material.button.MaterialButton
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/QuranWords.ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Word" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/suwaidButton"
-                    android:textColor="@color/textColor"
-                    android:text="Suwaid"/>
-
-                <com.google.android.material.button.MaterialButton
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/QuranWords.ToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Suwaid" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/husaryButton"
-                    android:textColor="@color/textColor"
-                    android:text="Husary"/>
+                    style="@style/QuranWords.ToggleButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Husary" />
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/reciterDropdownLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:boxBackgroundMode="outline"
+                app:endIconMode="dropdown_menu"
+                app:startIconDrawable="@android:drawable/ic_btn_speak_now"
+                app:startIconTint="@color/primary"
+                android:theme="@style/Theme.Material3.DayNight.NoActionBar">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/reciterDropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:popupBackground="@color/surface"
+                    android:textColor="@color/primary"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- 3. Audio Playback Button -->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -203,7 +253,7 @@
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginVertical="5dp"/>
+                android:layout_marginVertical="5dp" />
 
             <include
                 android:id="@+id/taskProgressLayout"
@@ -215,30 +265,30 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_top"
                 android:gravity="end"
-                android:orientation="horizontal"
-                android:layout_marginTop="@dimen/margin_top">
+                android:orientation="horizontal">
 
                 <Button
-                    style="?attr/materialButtonOutlinedStyle"
                     android:id="@+id/deleteButton"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawableEnd="@android:drawable/ic_menu_delete"
                     android:minWidth="0dp"
                     android:minHeight="0dp"
-                    android:padding="4dp"
-                    android:drawableEnd="@android:drawable/ic_menu_delete" />
+                    android:padding="4dp" />
 
                 <Button
-                    style="?attr/materialButtonOutlinedStyle"
                     android:id="@+id/editButton"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
+                    android:drawableEnd="@android:drawable/ic_menu_edit"
                     android:minWidth="0dp"
                     android:minHeight="0dp"
-                    android:padding="4dp"
-                    android:drawableEnd="@android:drawable/ic_menu_edit" />
+                    android:padding="4dp" />
 
                 <Button
                     android:id="@+id/navigationButton"
