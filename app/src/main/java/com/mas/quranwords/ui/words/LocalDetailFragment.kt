@@ -129,12 +129,14 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
                 R.id.studyModeButton -> {
                     playerMode = PlayerMode.PRACTICE
                     Preferences.savePlayerMode(requireContext(), playerMode)
+                    selectDefaultReciter(playerMode)
                     binding.audioModeGroup.isVisible = true
                     binding.reciterDropdownLayout.isVisible = false
                 }
                 R.id.listenModeButton -> {
                     playerMode = PlayerMode.LISTEN
                     Preferences.savePlayerMode(requireContext(), playerMode)
+                    selectDefaultReciter(playerMode)
                     binding.audioModeGroup.isVisible = false
                     binding.reciterDropdownLayout.isVisible = true
                 }
@@ -210,9 +212,9 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
             deleteButton.isVisible = editHide
             editButton.isVisible = editHide
             if (editHide) {
-                navigationButton.setBackgroundResource(android.R.drawable.ic_menu_send)
+                navigationButton.setBackgroundResource(R.drawable.expand_less)
             } else {
-                navigationButton.setBackgroundResource(android.R.drawable.ic_menu_view)
+                navigationButton.setBackgroundResource(R.drawable.expand_more)
             }
         }
         editHide = !editHide
@@ -226,8 +228,15 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
                 PlayerMode.LISTEN -> R.id.listenModeButton
             }
         )
+        selectDefaultReciter(playerMode)
     }
 
+    private fun selectDefaultReciter(mode: PlayerMode) {
+        selectedReciter = when(mode) {
+            PlayerMode.PRACTICE -> Reciters.ALL.first()
+            PlayerMode.LISTEN -> Reciters.RECITERS_ONLY.first()
+        }
+    }
 
     override fun onDestroyView() {
         _binding = null
