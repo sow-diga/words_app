@@ -29,4 +29,35 @@
         android:name="com.mas.quranwords.ui.NumbersFragment"
         android:label="Numbers"/>
 
+    <fragment
+        android:id="@+id/wordListFragment"
+        android:name="com.mas.quranwords.ui.words.WordListFragment"
+        android:label="Numbers"/>
+
+    <fragment
+        android:id="@+id/addWordFragment"
+        android:name="com.mas.quranwords.ui.words.AddWordFragment">
+        <argument
+            android:name="wordId"
+            app:argType="long"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/editWordFragment"
+        android:name="com.mas.quranwords.ui.words.EditWordFragment">
+        <argument
+            android:name="wordId"
+            app:argType="long"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/localDetailFragment"
+        android:name="com.mas.quranwords.ui.words.LocalDetailFragment"
+        android:label="Local Detail">
+        <argument
+            android:name="wordId"
+            app:argType="long"/>
+
+    </fragment>
+
 </navigation>

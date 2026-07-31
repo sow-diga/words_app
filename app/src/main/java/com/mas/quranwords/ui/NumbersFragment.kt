@@ -7,6 +7,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.mas.quranwords.R
 import com.mas.quranwords.databinding.FragmentNumbersBinding
+import com.mas.quranwords.util.Preferences
 import java.util.*
 import kotlin.random.Random
 
@@ -31,10 +32,22 @@ class NumbersFragment : Fragment(R.layout.fragment_numbers) , TextToSpeech.OnIni
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentNumbersBinding.bind(view)
 
+        restoreLearningMode()
+
         tts = TextToSpeech(requireActivity(), this)
 
         setupModeSelector()
         setupButtons()
+    }
+
+    private fun restoreLearningMode() {
+        val savedMode = Preferences.getLearningMode(requireContext(), LearningMode.MEDIUM.name)
+        mode = LearningMode.valueOf(savedMode)
+        when (mode) {
+            LearningMode.EASY -> binding.easyMode.isChecked = true
+            LearningMode.MEDIUM -> binding.mediumMode.isChecked = true
+            LearningMode.HARD -> binding.hardMode.isChecked = true
+        }
     }
 
     private fun setupModeSelector() {
@@ -45,6 +58,8 @@ class NumbersFragment : Fragment(R.layout.fragment_numbers) , TextToSpeech.OnIni
                 binding.hardMode.id -> LearningMode.HARD
                 else -> LearningMode.MEDIUM
             }
+
+            Preferences.saveLearningMode(requireContext(), mode.name)
         }
     }
 
@@ -81,7 +96,8 @@ class NumbersFragment : Fragment(R.layout.fragment_numbers) , TextToSpeech.OnIni
                 streak = 0
                 binding.feedback.text = "✗ Incorrect. Try again!"
                 binding.feedback.setTextColor(requireActivity().getColor(android.R.color.holo_red_dark))
-                speak("حاول مرة أخرى")
+                binding.answerInput.setText("")
+                speak("حاول مرة أخرى", "INCORRECT")
             }
 
             updateScoreUI()
@@ -113,6 +129,10 @@ class NumbersFragment : Fragment(R.layout.fragment_numbers) , TextToSpeech.OnIni
                 if (utteranceId == "CORRECT") {
                     requireActivity().runOnUiThread {
                         binding.newBtn.performClick()
+                    }
+                } else if (utteranceId == "INCORRECT") {
+                    requireActivity().runOnUiThread {
+                        binding.repeatBtn.performClick()
                     }
                 }
             }

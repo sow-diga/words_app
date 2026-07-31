@@ -31,6 +31,7 @@ class DetailActivity : AppCompatActivity() {
                 ItemType.WORD.name -> R.id.listFragment
                 ItemType.MEMORIZE.name -> R.id.listFragment
                 ItemType.MISTAKE.name -> R.id.listFragment
+                ItemType.LOCAL.name -> R.id.wordListFragment
                 ItemType.NUMBERS.name -> R.id.numbersFragment
                 else -> R.id.listFragment
             }
