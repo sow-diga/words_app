@@ -1,9 +1,17 @@
 package com.mas.quranwords.data.db
 
 object WordCategory {
-    const val WORD = "WORD"
-    const val MEMORIZE = "MEMORIZE"
-    const val MISTAKE = "MISTAKE"
-    const val REPAIR =  "REPAIR"
-    const val AYAH = "AYAH"
+    const val WORD = "Word"
+    const val MEMORIZE = "Memorize"
+    const val MISTAKE = "Mistake"
+    const val REPAIR =  "Repair"
+    const val AYAH = "Ayah"
+
+    val ALL = listOf(
+        WORD,
+        MEMORIZE,
+        MISTAKE,
+        REPAIR,
+        AYAH
+    )
 }

@@ -11,7 +11,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mas.quranwords.R
-import com.mas.quranwords.audio.AudioMode
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import com.mas.quranwords.audio.PlaybackSpeed
 import com.mas.quranwords.data.QuranRepository
 import com.mas.quranwords.data.db.WordRecord
@@ -57,7 +59,10 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
         _binding = FragmentLocalDetailBinding.bind(view)
 
-        loadWord()
+        //loadWord()
+        observeWord()
+        viewModel.loadWord(wordId)
+
         setupButtons()
         setupTracker()
         initUi()
@@ -145,6 +150,14 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
         binding.reciterDropdown.setOnItemClickListener { parent, _, position, _ ->
             selectedReciter = parent.getItemAtPosition(position) as Reciter
+        }
+
+        binding.nextButton.setOnClickListener {
+            viewModel.nextWord()
+        }
+
+        binding.previousButton.setOnClickListener {
+            viewModel.previousWord()
         }
     }
 
@@ -241,5 +254,26 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    private fun observeWord() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(
+                androidx.lifecycle.Lifecycle.State.STARTED
+            ) {
+                viewModel.currentWord.collect { word ->
+                    word ?: return@collect
+                    currentWord = word
+                    updateUi(word)
+                    updateNavigationButtons()
+                }
+            }
+        }
+    }
+
+    private fun updateNavigationButtons() {
+        binding.previousButton.isEnabled = viewModel.hasPrevious
+        binding.nextButton.isEnabled = viewModel.hasNext
+        binding.positionText.text = "${viewModel.position} / ${viewModel.total}"
     }
 }

@@ -4,7 +4,7 @@ import com.mas.quranwords.data.db.WordRecord
 import com.mas.quranwords.models.WordItem
 
 fun WordItem.toWordRecord(
-    category: String = "WORD"
+    category: String
 ): WordRecord {
 
     return WordRecord(
