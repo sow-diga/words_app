@@ -18,4 +18,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#52525C</color>
     <color name="textColor">#1C398E</color>
+    <color name="card_background">#F0F8FF</color>
+    <!-- Slightly muted Slate Blue (Secondary/Alternative surface) -->
+    <color name="card_background_dark">#F0F4F8</color>
 </resources>

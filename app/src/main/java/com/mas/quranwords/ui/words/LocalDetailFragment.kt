@@ -1,6 +1,6 @@
 package com.mas.quranwords.ui.words
 
-
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -26,6 +26,7 @@ import com.mas.quranwords.player.AudioPlayer
 import com.mas.quranwords.qari.Reciter
 import com.mas.quranwords.qari.Reciters
 import com.mas.quranwords.ui.adapter.ReciterAdapter
+import com.mas.quranwords.ui.common.OnSwipeTouchListener
 import com.mas.quranwords.ui.mapper.renderState
 import com.mas.quranwords.util.Preferences
 import com.mas.quranwords.util.TaskProgressTracker
@@ -65,6 +66,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
         setupButtons()
         setupTracker()
+        setupSwipe()
         initUi()
     }
 
@@ -92,6 +94,30 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
         }
     }
 
+    private fun animateWord(direction: Int, action: () -> Unit) {
+        val distance =
+            if (direction > 0)
+                -binding.contentContainer.width * 0.25f
+            else
+                binding.contentContainer.width * 0.25f
+
+        binding.contentContainer.animate()
+            .translationX(distance)
+            .alpha(0f)
+            .setDuration(120)
+            .withEndAction {
+                action()
+                binding.contentContainer.translationX = -distance
+                binding.contentContainer.alpha = 0f
+                binding.contentContainer.animate()
+                    .translationX(0f)
+                    .alpha(1f)
+                    .setDuration(120)
+                    .start()
+            }
+            .start()
+    }
+
     private fun setupButtons() {
         binding.editButton.setOnClickListener {
             findNavController()
@@ -107,7 +133,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
             showDeleteDialog()
         }
 
-        binding.audioModeGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+        binding.audioControlLayout.audioModeGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
             selectedReciter = when (checkedId) {
                 R.id.wordAudioButton -> Reciters.WORD_ONLY
@@ -117,7 +143,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
             }
         }
 
-        binding.playAudioButton.setOnClickListener {
+        binding.audioControlLayout.playAudioButton.setOnClickListener {
             currentWord?.let { word ->
                 AudioPlayer.play(UrlBuilder.buildAudio(word, selectedReciter))
             }
@@ -127,7 +153,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
             editLayoutControl()
         }
 
-        binding.modeGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+        binding.audioControlLayout.modeGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
 
             when (checkedId) {
@@ -135,35 +161,47 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
                     playerMode = PlayerMode.PRACTICE
                     Preferences.savePlayerMode(requireContext(), playerMode)
                     selectDefaultReciter(playerMode)
-                    binding.audioModeGroup.isVisible = true
-                    binding.reciterDropdownLayout.isVisible = false
+                    binding.audioControlLayout.audioModeGroup.isVisible = true
+                    binding.audioControlLayout.reciterDropdownLayout.isVisible = false
                 }
                 R.id.listenModeButton -> {
                     playerMode = PlayerMode.LISTEN
                     Preferences.savePlayerMode(requireContext(), playerMode)
                     selectDefaultReciter(playerMode)
-                    binding.audioModeGroup.isVisible = false
-                    binding.reciterDropdownLayout.isVisible = true
+                    binding.audioControlLayout.audioModeGroup.isVisible = false
+                    binding.audioControlLayout.reciterDropdownLayout.isVisible = true
                 }
             }
         }
 
-        binding.reciterDropdown.setOnItemClickListener { parent, _, position, _ ->
+        binding.audioControlLayout.reciterDropdown.setOnItemClickListener { parent, _, position, _ ->
             selectedReciter = parent.getItemAtPosition(position) as Reciter
         }
 
         binding.nextButton.setOnClickListener {
-            viewModel.nextWord()
+            goToNextWord()
         }
 
         binding.previousButton.setOnClickListener {
+            goToPreviousWord()
+        }
+    }
+
+    private fun goToNextWord() {
+        animateWord(+1) {
+            viewModel.nextWord()
+        }
+    }
+
+    private fun goToPreviousWord() {
+        animateWord(-1) {
             viewModel.previousWord()
         }
     }
 
     private fun setupTracker() {
         binding.taskProgressLayout.renderState(progressTracker.state, animate = false)
-        binding.root.setOnClickListener {
+        binding.taskProgressLayout.root.setOnClickListener {
             val wasPhase1Complete = progressTracker.state.isPhase1Complete
             val newState = progressTracker.registerTap()
             binding.taskProgressLayout.renderState(newState, animate = true)
@@ -180,7 +218,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
     }
 
     private fun initUi() {
-        binding.playLoop.setOnCheckedChangeListener { _, isChecked ->
+        binding.audioControlLayout.playLoop.setOnCheckedChangeListener { _, isChecked ->
             AudioPlayer.setSingleLoop(isChecked)
         }
 
@@ -192,9 +230,9 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
     private fun initializePlaybackSpeed() {
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, PlaybackSpeed.values())
-        binding.playbackSpeedDropdown.setAdapter(adapter)
-        binding.playbackSpeedDropdown.setText(selectedPlaybackSpeed.label, false)
-        binding.playbackSpeedDropdown.setOnItemClickListener { parent, _, position, _ ->
+        binding.audioControlLayout.playbackSpeedDropdown.setAdapter(adapter)
+        binding.audioControlLayout.playbackSpeedDropdown.setText(selectedPlaybackSpeed.label, false)
+        binding.audioControlLayout.playbackSpeedDropdown.setOnItemClickListener { parent, _, position, _ ->
             selectedPlaybackSpeed = parent.getItemAtPosition(position) as PlaybackSpeed
             AudioPlayer.setSpeed(selectedPlaybackSpeed.value)
         }
@@ -202,8 +240,8 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
     private fun initializeReciters() {
         val adapter = ReciterAdapter(requireContext(), Reciters.RECITERS_ONLY)
-        binding.reciterDropdown.setAdapter(adapter)
-        binding.reciterDropdown.setText(selectedReciter.name, false)
+        binding.audioControlLayout.reciterDropdown.setAdapter(adapter)
+        binding.audioControlLayout.reciterDropdown.setText(selectedReciter.name, false)
     }
 
     private fun showDeleteDialog() {
@@ -235,7 +273,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
     private fun initPlayerMode() {
         playerMode = Preferences.getPlayerMode(requireContext())
-        binding.modeGroup.check(
+        binding.audioControlLayout.modeGroup.check(
             when (playerMode) {
                 PlayerMode.PRACTICE -> R.id.studyModeButton
                 PlayerMode.LISTEN -> R.id.listenModeButton
@@ -275,5 +313,20 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
         binding.previousButton.isEnabled = viewModel.hasPrevious
         binding.nextButton.isEnabled = viewModel.hasNext
         binding.positionText.text = "${viewModel.position} / ${viewModel.total}"
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupSwipe() {
+        binding.contentContainer.setOnTouchListener(
+            object : OnSwipeTouchListener(requireContext()) {
+                override fun onSwipeLeft() {
+                    goToNextWord()
+                }
+
+                override fun onSwipeRight() {
+                    goToPreviousWord()
+                }
+            }
+        )
     }
 }
