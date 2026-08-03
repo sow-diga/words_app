@@ -1,183 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp">
-
+    <ScrollView
+        android:id="@+id/contentScroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/contentContainer"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:padding="20dp">
 
-            <!-- Arabic Word -->
-            <TextView
-                android:id="@+id/detailWordTextView"
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/contentContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="وَٱشْتَعَلَ"
-                android:textColor="@color/textColor"
-                android:textSize="40sp"
-                android:textStyle="bold"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <!-- Comment -->
-            <TextView
-                android:id="@+id/detailCommentTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingHorizontal="@dimen/padding_main"
-                android:text="Comment"
-                android:textColor="@color/textColor"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/detailWordTextView" />
-
-            <!-- English -->
-            <TextView
-                android:id="@+id/detailEnglishTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="and flared"
-                android:textColor="@color/primary"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/detailCommentTextView" />
-
-            <!-- Location -->
-            <TextView
-                android:id="@+id/detailSurahTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Surah 19, Ayah 4"
-                android:textColor="@color/textColor"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/detailEnglishTextView" />
-
-            <!-- Ayah -->
-            <TextView
-                android:id="@+id/detailAyahTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/padding_main"
-                android:textColor="@color/black"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/detailSurahTextView" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/previousButton"
-                android:layout_width="@dimen/icon_size_normal"
-                android:layout_height="@dimen/icon_size_big"
-                android:background="@drawable/arrow_left"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/detailSurahTextView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/contentContainer" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/nextButton"
-                android:layout_width="@dimen/icon_size_normal"
-                android:layout_height="@dimen/icon_size_big"
-                android:background="@drawable/arrow_right"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/detailSurahTextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/contentContainer" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!-- Buttons -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_top"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/contentContainer">
-
-            <include
-                android:id="@+id/audioControlLayout"
-                layout="@layout/layout_audio_control"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <include
-                android:id="@+id/taskProgressLayout"
-                layout="@layout/layout_task_progress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_top" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_top"
-                android:gravity="end"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/deleteButton"
-                    android:layout_width="@dimen/icon_size_small"
-                    android:layout_height="@dimen/icon_size_small"
-                    android:background="@drawable/ic_delete" />
-
-                <Button
-                    android:id="@+id/editButton"
-                    android:layout_width="@dimen/icon_size_small"
-                    android:layout_height="@dimen/icon_size_small"
-                    android:layout_marginStart="20dp"
-                    android:background="@drawable/ic_edit" />
-
-                <Button
-                    android:id="@+id/navigationButton"
-                    android:layout_width="@dimen/icon_size_small"
-                    android:layout_height="@dimen/icon_size_small"
-                    android:background="@drawable/expand_more" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/navigationLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
+                <!-- Arabic Word -->
                 <TextView
-                    android:id="@+id/positionText"
+                    android:id="@+id/detailWordTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="center"
-                    android:text="1 / 1"
-                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+                    android:text="وَٱشْتَعَلَ"
+                    android:textColor="@color/textColor"
+                    android:textSize="40sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <!-- Comment -->
+                <TextView
+                    android:id="@+id/detailCommentTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/padding_main"
+                    android:text="Comment"
+                    android:textColor="@color/textColor"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/detailWordTextView" />
+
+                <!-- English -->
+                <TextView
+                    android:id="@+id/detailEnglishTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="and flared"
+                    android:textColor="@color/primary"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/detailCommentTextView" />
+
+                <!-- Location -->
+                <TextView
+                    android:id="@+id/detailSurahTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Surah 19, Ayah 4"
+                    android:textColor="@color/textColor"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/detailEnglishTextView" />
+
+                <!-- Ayah -->
+                <TextView
+                    android:id="@+id/detailAyahTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/padding_main"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/detailSurahTextView" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/previousButton"
+                    android:layout_width="@dimen/icon_size_normal"
+                    android:layout_height="@dimen/icon_size_big"
+                    android:background="@drawable/arrow_left"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/detailSurahTextView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/contentContainer" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/nextButton"
+                    android:layout_width="@dimen/icon_size_normal"
+                    android:layout_height="@dimen/icon_size_big"
+                    android:background="@drawable/arrow_right"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/detailSurahTextView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/contentContainer" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Buttons -->
+            <LinearLayout
+                android:id="@+id/controlContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_top"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/contentContainer">
+
+                <include
+                    android:id="@+id/audioControlLayout"
+                    layout="@layout/layout_audio_control"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:id="@+id/taskProgressLayout"
+                    layout="@layout/layout_task_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_top" />
 
             </LinearLayout>
-        </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <com.mas.quranwords.ui.custom.WordStudyBar
+        android:id="@+id/bottomBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

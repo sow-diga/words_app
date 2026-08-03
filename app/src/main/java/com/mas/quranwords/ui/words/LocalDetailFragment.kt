@@ -65,6 +65,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
         viewModel.loadWord(wordId)
 
         setupButtons()
+        setupStudyMode()
         setupTracker()
         setupSwipe()
         initUi()
@@ -119,7 +120,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
     }
 
     private fun setupButtons() {
-        binding.editButton.setOnClickListener {
+        binding.bottomBar.setOnEditClick  {
             findNavController()
                 .navigate(
                     R.id.editWordFragment,
@@ -129,7 +130,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
                 )
         }
 
-        binding.deleteButton.setOnClickListener {
+        binding.bottomBar.setOnDeleteClick  {
             showDeleteDialog()
         }
 
@@ -149,29 +150,8 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
             }
         }
 
-        binding.navigationButton.setOnClickListener {
+        binding.bottomBar.setOnNavigationClick {
             editLayoutControl()
-        }
-
-        binding.audioControlLayout.modeGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (!isChecked) return@addOnButtonCheckedListener
-
-            when (checkedId) {
-                R.id.studyModeButton -> {
-                    playerMode = PlayerMode.PRACTICE
-                    Preferences.savePlayerMode(requireContext(), playerMode)
-                    selectDefaultReciter(playerMode)
-                    binding.audioControlLayout.audioModeGroup.isVisible = true
-                    binding.audioControlLayout.reciterDropdownLayout.isVisible = false
-                }
-                R.id.listenModeButton -> {
-                    playerMode = PlayerMode.LISTEN
-                    Preferences.savePlayerMode(requireContext(), playerMode)
-                    selectDefaultReciter(playerMode)
-                    binding.audioControlLayout.audioModeGroup.isVisible = false
-                    binding.audioControlLayout.reciterDropdownLayout.isVisible = true
-                }
-            }
         }
 
         binding.audioControlLayout.reciterDropdown.setOnItemClickListener { parent, _, position, _ ->
@@ -196,6 +176,32 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
     private fun goToPreviousWord() {
         animateWord(-1) {
             viewModel.previousWord()
+        }
+    }
+
+    private fun setupStudyMode() {
+        with (binding.audioControlLayout) {
+            modeGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+                if (!isChecked) return@addOnButtonCheckedListener
+
+                when (checkedId) {
+                    R.id.studyModeButton -> {
+                        playerMode = PlayerMode.PRACTICE
+                        Preferences.savePlayerMode(requireContext(), playerMode)
+                        selectDefaultReciter(playerMode)
+                        audioModeGroup.isVisible = true
+                        reciterDropdownLayout.isVisible = false
+                    }
+
+                    R.id.listenModeButton -> {
+                        playerMode = PlayerMode.LISTEN
+                        Preferences.savePlayerMode(requireContext(), playerMode)
+                        selectDefaultReciter(playerMode)
+                        audioModeGroup.isVisible = false
+                        reciterDropdownLayout.isVisible = true
+                    }
+                }
+            }
         }
     }
 
@@ -230,18 +236,22 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
     private fun initializePlaybackSpeed() {
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, PlaybackSpeed.values())
-        binding.audioControlLayout.playbackSpeedDropdown.setAdapter(adapter)
-        binding.audioControlLayout.playbackSpeedDropdown.setText(selectedPlaybackSpeed.label, false)
-        binding.audioControlLayout.playbackSpeedDropdown.setOnItemClickListener { parent, _, position, _ ->
-            selectedPlaybackSpeed = parent.getItemAtPosition(position) as PlaybackSpeed
-            AudioPlayer.setSpeed(selectedPlaybackSpeed.value)
+        with(binding.audioControlLayout.playbackSpeedDropdown) {
+            setAdapter(adapter)
+            setText(selectedPlaybackSpeed.label, false)
+            setOnItemClickListener { parent, _, position, _ ->
+                selectedPlaybackSpeed = parent.getItemAtPosition(position) as PlaybackSpeed
+                AudioPlayer.setSpeed(selectedPlaybackSpeed.value)
+            }
         }
     }
 
     private fun initializeReciters() {
         val adapter = ReciterAdapter(requireContext(), Reciters.RECITERS_ONLY)
-        binding.audioControlLayout.reciterDropdown.setAdapter(adapter)
-        binding.audioControlLayout.reciterDropdown.setText(selectedReciter.name, false)
+        with(binding.audioControlLayout.reciterDropdown) {
+            setAdapter(adapter)
+            setText(selectedReciter.name, false)
+        }
     }
 
     private fun showDeleteDialog() {
@@ -260,13 +270,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
     private fun editLayoutControl() {
         binding.apply {
-            deleteButton.isVisible = editHide
-            editButton.isVisible = editHide
-            if (editHide) {
-                navigationButton.setBackgroundResource(R.drawable.expand_less)
-            } else {
-                navigationButton.setBackgroundResource(R.drawable.expand_more)
-            }
+            binding.bottomBar.setExpanded(editHide)
         }
         editHide = !editHide
     }
@@ -312,7 +316,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
     private fun updateNavigationButtons() {
         binding.previousButton.isEnabled = viewModel.hasPrevious
         binding.nextButton.isEnabled = viewModel.hasNext
-        binding.positionText.text = "${viewModel.position} / ${viewModel.total}"
+        binding.bottomBar.setPosition(viewModel.position, viewModel.total)
     }
 
     @SuppressLint("ClickableViewAccessibility")
