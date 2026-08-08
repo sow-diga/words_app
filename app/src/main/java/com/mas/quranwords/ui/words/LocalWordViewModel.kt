@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mas.quranwords.data.db.WordRecord
 import com.mas.quranwords.data.repository.LocalWordRepository
+import com.mas.quranwords.domain.filter.WordFilter
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 
 class LocalWordViewModel(
     private val repository: LocalWordRepository
@@ -20,7 +23,10 @@ class LocalWordViewModel(
 
     private val _currentWord = MutableStateFlow<WordRecord?>(null)
     val currentWord: StateFlow<WordRecord?> = _currentWord
+    private val _filter = MutableStateFlow(WordFilter())
+    val filter = _filter.asStateFlow()
 
+    /*
     val words =
         repository.getAllWords()
             .stateIn(
@@ -28,11 +34,20 @@ class LocalWordViewModel(
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList()
             )
-
+*/
     fun loadByCategory(category: String) {
         // Later we can switch this dynamically
         // without changing fragments
     }
+
+    // TODO Upgrade project to AGP 8.x + Kotlin 2.x after the current feature work is finished.
+    val words = _filter.flatMapLatest { filter ->
+            repository.getWords(filter)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
     fun insert(word: WordRecord) {
         viewModelScope.launch {
@@ -59,9 +74,9 @@ class LocalWordViewModel(
         }
     }
 
-    fun loadWord(id: Long) {
+    fun loadWord(id: Long, filter: WordFilter) {
         viewModelScope.launch {
-            wordList = repository.getAllWords().first()
+            wordList = repository.getWords(filter).first()
             currentIndex = wordList.indexOfFirst { it.id == id }
             if (currentIndex != -1) {
                 _currentWord.value = wordList[currentIndex]
@@ -94,4 +109,8 @@ class LocalWordViewModel(
 
     val total: Int
         get() = wordList.size
+
+    fun updateFilter(filter: WordFilter) {
+        _filter.value = filter
+    }
 }

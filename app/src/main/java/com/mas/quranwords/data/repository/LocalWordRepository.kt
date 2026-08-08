@@ -3,6 +3,7 @@ package com.mas.quranwords.data.repository
 import kotlinx.coroutines.flow.Flow
 import com.mas.quranwords.data.db.WordRecord
 import com.mas.quranwords.data.db.WordDao
+import com.mas.quranwords.domain.filter.WordFilter
 
 
 class LocalWordRepository(
@@ -19,6 +20,14 @@ class LocalWordRepository(
 
     fun getWordsBySurah(category: String, surah: Int): Flow<List<WordRecord>> {
         return dao.getBySurah(category, surah)
+    }
+
+    fun getWords(filter: WordFilter): Flow<List<WordRecord>> {
+        return dao.getFiltered(
+            category = filter.category,
+            surah = filter.surah,
+            level = filter.level
+        )
     }
 
     suspend fun getWord(id: Long): WordRecord? {

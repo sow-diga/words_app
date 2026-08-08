@@ -2,41 +2,46 @@ package com.mas.quranwords.ui.words
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mas.quranwords.data.db.WordRecord
 import com.mas.quranwords.databinding.ItemLocalWordBinding
 
 class LocalWordAdapter(
     private val onClick: (WordRecord) -> Unit
-) :
-    RecyclerView.Adapter<LocalWordAdapter.ViewHolder>() {
-
-    private val items = mutableListOf<WordRecord>()
-
-    fun submitList(words: List<WordRecord>) {
-        items.clear()
-        items.addAll(words)
-        notifyDataSetChanged()
-    }
+) : ListAdapter<WordRecord, LocalWordAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemLocalWordBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = items.size
 
     inner class ViewHolder(private val binding: ItemLocalWordBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(word: WordRecord) {
-            binding.wordText.text = word.word
-            binding.infoText.text = "Surah ${word.surahNumber} : ${word.ayahNumber}"
-            binding.root.setOnClickListener {
-                onClick(word)
+            with(binding) {
+                wordText.text = word.word
+                infoText.text = "Surah ${word.surahNumber} : ${word.ayahNumber}"
+                root.setOnClickListener {
+                    onClick(word)
+                }
             }
+        }
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<WordRecord>() {
+
+        override fun areItemsTheSame(oldItem: WordRecord, newItem: WordRecord): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: WordRecord, newItem: WordRecord): Boolean {
+            return oldItem == newItem
         }
     }
 }

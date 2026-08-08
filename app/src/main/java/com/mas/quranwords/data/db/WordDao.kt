@@ -15,6 +15,20 @@ interface WordDao {
     @Query("SELECT * FROM words WHERE category = :category AND surahNumber = :surah ORDER BY ayahNumber")
     fun getBySurah(category: String, surah: Int): Flow<List<WordRecord>>
 
+    @Query("""
+    SELECT *
+    FROM words
+    WHERE (:category IS NULL OR category = :category)
+      AND (:surah IS NULL OR surahNumber = :surah)
+      AND (:level IS NULL OR level = :level)
+    ORDER BY surahNumber, ayahNumber, wordPosition
+""")
+    fun getFiltered(
+        category: String?,
+        surah: Int?,
+        level: String?
+    ): Flow<List<WordRecord>>
+
     @Query("SELECT * FROM words WHERE id = :id")
     suspend fun get(id: Long): WordRecord?
 

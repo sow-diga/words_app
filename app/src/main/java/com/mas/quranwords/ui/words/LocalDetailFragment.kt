@@ -20,6 +20,7 @@ import com.mas.quranwords.data.db.WordRecord
 import com.mas.quranwords.data.repository.LocalWordRepositoryProvider
 import com.mas.quranwords.databinding.FragmentLocalDetailBinding
 import com.mas.quranwords.domain.extensions.showIfNotBlank
+import com.mas.quranwords.domain.filter.WordFilter
 import com.mas.quranwords.models.PlayerMode
 import com.mas.quranwords.navigation.NavigationArgs
 import com.mas.quranwords.player.AudioPlayer
@@ -48,6 +49,10 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
         requireArguments().getLong(NavigationArgs.WORD_ID)
     }
 
+    private fun getWordFilter(): WordFilter {
+        return requireArguments().getParcelable(NavigationArgs.WORD_FILTER) ?: WordFilter()
+    }
+
     private var currentWord: WordRecord? = null
     private var selectedPlaybackSpeed = PlaybackSpeed.NORMAL
     private var editHide = false
@@ -62,7 +67,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
         //loadWord()
         observeWord()
-        viewModel.loadWord(wordId)
+        viewModel.loadWord(wordId, getWordFilter())
 
         setupButtons()
         setupStudyMode()
