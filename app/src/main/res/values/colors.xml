@@ -9,6 +9,7 @@
     <color name="on_secondary">#FFFFFF</color>
     <color name="background">#FAFAFE</color>
     <color name="surface">#FAFAFE</color>
+
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -17,7 +18,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#52525C</color>
+
     <color name="textColor">#1C398E</color>
+    <color name="textColorSecondary">#6F7078</color>
+
     <color name="card_background">#F0F8FF</color>
     <!-- Slightly muted Slate Blue (Secondary/Alternative surface) -->
     <color name="card_background_dark">#F0F4F8</color>

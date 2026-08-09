@@ -1,5 +1,19 @@
 <resources>
     <string name="app_name">Quran words</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="home_title">Quran Words</string>
+    <string name="home_subtitle">Learn, practice, and remember</string>
+    <string name="home_words">Words</string>
+    <string name="home_words_description">Browse and manage your words</string>
+    <string name="home_numbers">Numbers</string>
+    <string name="home_numbers_description">Practice Arabic numbers</string>
+    <string name="home_review">Review</string>
+    <string name="home_review_description">Test your word knowledge</string>
+    <string name="home_coming_soon">Coming soon</string>
+    <plurals name="home_word_count">
+        <item quantity="one">%d word</item>
+        <item quantity="other">%d words</item>
+    </plurals>
+
+
 </resources>

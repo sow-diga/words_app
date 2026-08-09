@@ -30,6 +30,10 @@ class LocalWordRepository(
         )
     }
 
+    fun getWordCount(): Flow<Int> {
+        return dao.getWordCount()
+    }
+
     suspend fun getWord(id: Long): WordRecord? {
         return dao.get(id)
     }

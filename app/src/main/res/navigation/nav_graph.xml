@@ -2,8 +2,70 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/listFragment">
+    app:startDestination="@id/homeFragment">
 
+    <!-- Home -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.mas.quranwords.ui.home.HomeFragment"
+        android:label="Home">
+
+        <action
+            android:id="@+id/action_homeFragment_to_wordListFragment"
+            app:destination="@id/wordListFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_numbersFragment"
+            app:destination="@id/numbersFragment" />
+
+    </fragment>
+
+    <!-- List of Words -->
+    <fragment
+        android:id="@+id/wordListFragment"
+        android:name="com.mas.quranwords.ui.words.WordListFragment"
+        android:label="Words"/>
+
+    <!-- Add Word -->
+    <fragment
+        android:id="@+id/addWordFragment"
+        android:name="com.mas.quranwords.ui.words.AddWordFragment">
+        <argument
+            android:name="wordId"
+            app:argType="long"/>
+    </fragment>
+
+    <!-- Edit Word -->
+    <fragment
+        android:id="@+id/editWordFragment"
+        android:name="com.mas.quranwords.ui.words.EditWordFragment">
+        <argument
+            android:name="wordId"
+            app:argType="long"/>
+    </fragment>
+
+    <!-- Word Detail -->
+    <fragment
+        android:id="@+id/localDetailFragment"
+        android:name="com.mas.quranwords.ui.words.LocalDetailFragment"
+        android:label="Local Detail">
+        <argument
+            android:name="wordId"
+            app:argType="long"/>
+    </fragment>
+
+    <!-- Numbers -->
+    <fragment
+        android:id="@+id/numbersFragment"
+        android:name="com.mas.quranwords.ui.NumbersFragment"
+        android:label="Numbers"/>
+
+    <!-- Review (coming soon) -->
+
+    <!--
+    FIXME: Old navigation.
+    Delete after confirming nothing references these destinations.
+    -->
     <fragment
         android:id="@+id/listFragment"
         android:name="com.mas.quranwords.ui.ListFragment"
@@ -23,41 +85,5 @@
         android:id="@+id/detailFragment"
         android:name="com.mas.quranwords.ui.DetailFragment"
         android:label="Detail"/>
-
-    <fragment
-        android:id="@+id/numbersFragment"
-        android:name="com.mas.quranwords.ui.NumbersFragment"
-        android:label="Numbers"/>
-
-    <fragment
-        android:id="@+id/wordListFragment"
-        android:name="com.mas.quranwords.ui.words.WordListFragment"
-        android:label="Numbers"/>
-
-    <fragment
-        android:id="@+id/addWordFragment"
-        android:name="com.mas.quranwords.ui.words.AddWordFragment">
-        <argument
-            android:name="wordId"
-            app:argType="long"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/editWordFragment"
-        android:name="com.mas.quranwords.ui.words.EditWordFragment">
-        <argument
-            android:name="wordId"
-            app:argType="long"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/localDetailFragment"
-        android:name="com.mas.quranwords.ui.words.LocalDetailFragment"
-        android:label="Local Detail">
-        <argument
-            android:name="wordId"
-            app:argType="long"/>
-
-    </fragment>
 
 </navigation>
