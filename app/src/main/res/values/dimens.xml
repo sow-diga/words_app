@@ -8,5 +8,6 @@
     <dimen name="icon_size_small">30dp</dimen>
 
     <dimen name="padding_main">10dp</dimen>
+    <dimen name="padding_small">5dp</dimen>
     <dimen name="padding_big">20dp</dimen>
 </resources>

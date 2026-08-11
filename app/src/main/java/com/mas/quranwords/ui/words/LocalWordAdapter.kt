@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mas.quranwords.data.QuranRepository
 import com.mas.quranwords.data.db.WordRecord
 import com.mas.quranwords.databinding.ItemLocalWordBinding
 
@@ -26,7 +27,8 @@ class LocalWordAdapter(
         fun bind(word: WordRecord) {
             with(binding) {
                 wordText.text = word.word
-                infoText.text = "Surah ${word.surahNumber} : ${word.ayahNumber}"
+                val surahText = QuranRepository.getSurahName(word.surahNumber)
+                infoText.text = "${surahText} : ${word.ayahNumber}"
                 root.setOnClickListener {
                     onClick(word)
                 }

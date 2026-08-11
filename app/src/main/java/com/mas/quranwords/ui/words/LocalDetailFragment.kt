@@ -222,8 +222,9 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
             }
 
             if (newState.isFullyComplete) {
-                AudioPlayer.playAssetAudio(requireContext(), "success_chime.mp3")
+                stopLoop()
                 triggerSuccessVibration(requireContext())
+                AudioPlayer.playAssetAudio(requireContext(), "success_chime.mp3")
             }
         }
     }
@@ -337,5 +338,10 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
                 }
             }
         )
+    }
+
+    private fun stopLoop() {
+        binding.audioControlLayout.playLoop.isChecked = false
+        AudioPlayer.stop()
     }
 }
