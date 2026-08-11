@@ -14,6 +14,7 @@ import com.mas.quranwords.R
 import com.mas.quranwords.data.db.AppDatabase
 import com.mas.quranwords.data.repository.LocalWordRepository
 import com.mas.quranwords.databinding.FragmentWordListBinding
+import com.mas.quranwords.domain.filter.WordFilter
 import com.mas.quranwords.navigation.NavigationArgs
 
 
@@ -35,6 +36,7 @@ class WordListFragment : Fragment(R.layout.fragment_word_list) {
 
         _binding = FragmentWordListBinding.bind(view)
         setupRecyclerView()
+        initFilter()
         observeWords()
         binding.addWordFab.setOnClickListener {
 
@@ -48,13 +50,24 @@ class WordListFragment : Fragment(R.layout.fragment_word_list) {
         adapter = LocalWordAdapter { word ->
             findNavController().navigate(
                     R.id.localDetailFragment,
-                    bundleOf(NavigationArgs.WORD_ID to word.id)
-                )
+                    bundleOf(
+                        NavigationArgs.WORD_ID to word.id,
+                        NavigationArgs.WORD_FILTER to viewModel.filter.value)
+            )
         }
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@WordListFragment.adapter
+        }
+    }
+
+    private fun initFilter() {
+        binding.filterBar.apply {
+            setFilter(viewModel.filter.value)
+            setOnFilterChangedListener { filter ->
+                viewModel.updateFilter(filter)
+            }
         }
     }
 

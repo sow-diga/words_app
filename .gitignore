@@ -14,3 +14,7 @@
 .cxx
 local.properties
 .idea/deploymentTargetDropDown.xml
+.idea/deploymentTargetSelector.xml
+.idea/runConfigurations.xml
+.idea/migrations.xml
+.idea/AndroidProjectSystem.xml

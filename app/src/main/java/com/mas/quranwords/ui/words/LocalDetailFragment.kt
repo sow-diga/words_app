@@ -1,6 +1,6 @@
 package com.mas.quranwords.ui.words
 
-
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -20,12 +20,14 @@ import com.mas.quranwords.data.db.WordRecord
 import com.mas.quranwords.data.repository.LocalWordRepositoryProvider
 import com.mas.quranwords.databinding.FragmentLocalDetailBinding
 import com.mas.quranwords.domain.extensions.showIfNotBlank
+import com.mas.quranwords.domain.filter.WordFilter
 import com.mas.quranwords.models.PlayerMode
 import com.mas.quranwords.navigation.NavigationArgs
 import com.mas.quranwords.player.AudioPlayer
 import com.mas.quranwords.qari.Reciter
 import com.mas.quranwords.qari.Reciters
 import com.mas.quranwords.ui.adapter.ReciterAdapter
+import com.mas.quranwords.ui.common.OnSwipeTouchListener
 import com.mas.quranwords.ui.mapper.renderState
 import com.mas.quranwords.util.Preferences
 import com.mas.quranwords.util.TaskProgressTracker
@@ -47,6 +49,10 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
         requireArguments().getLong(NavigationArgs.WORD_ID)
     }
 
+    private fun getWordFilter(): WordFilter {
+        return requireArguments().getParcelable(NavigationArgs.WORD_FILTER) ?: WordFilter()
+    }
+
     private var currentWord: WordRecord? = null
     private var selectedPlaybackSpeed = PlaybackSpeed.NORMAL
     private var editHide = false
@@ -61,10 +67,12 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
         //loadWord()
         observeWord()
-        viewModel.loadWord(wordId)
+        viewModel.loadWord(wordId, getWordFilter())
 
         setupButtons()
+        setupStudyMode()
         setupTracker()
+        setupSwipe()
         initUi()
     }
 
@@ -92,8 +100,32 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
         }
     }
 
+    private fun animateWord(direction: Int, action: () -> Unit) {
+        val distance =
+            if (direction > 0)
+                -binding.contentContainer.width * 0.25f
+            else
+                binding.contentContainer.width * 0.25f
+
+        binding.contentContainer.animate()
+            .translationX(distance)
+            .alpha(0f)
+            .setDuration(120)
+            .withEndAction {
+                action()
+                binding.contentContainer.translationX = -distance
+                binding.contentContainer.alpha = 0f
+                binding.contentContainer.animate()
+                    .translationX(0f)
+                    .alpha(1f)
+                    .setDuration(120)
+                    .start()
+            }
+            .start()
+    }
+
     private fun setupButtons() {
-        binding.editButton.setOnClickListener {
+        binding.bottomBar.setOnEditClick  {
             findNavController()
                 .navigate(
                     R.id.editWordFragment,
@@ -103,11 +135,11 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
                 )
         }
 
-        binding.deleteButton.setOnClickListener {
+        binding.bottomBar.setOnDeleteClick  {
             showDeleteDialog()
         }
 
-        binding.audioModeGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+        binding.audioControlLayout.audioModeGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
             selectedReciter = when (checkedId) {
                 R.id.wordAudioButton -> Reciters.WORD_ONLY
@@ -117,53 +149,70 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
             }
         }
 
-        binding.playAudioButton.setOnClickListener {
+        binding.audioControlLayout.playAudioButton.setOnClickListener {
             currentWord?.let { word ->
                 AudioPlayer.play(UrlBuilder.buildAudio(word, selectedReciter))
             }
         }
 
-        binding.navigationButton.setOnClickListener {
+        binding.bottomBar.setOnNavigationClick {
             editLayoutControl()
         }
 
-        binding.modeGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (!isChecked) return@addOnButtonCheckedListener
-
-            when (checkedId) {
-                R.id.studyModeButton -> {
-                    playerMode = PlayerMode.PRACTICE
-                    Preferences.savePlayerMode(requireContext(), playerMode)
-                    selectDefaultReciter(playerMode)
-                    binding.audioModeGroup.isVisible = true
-                    binding.reciterDropdownLayout.isVisible = false
-                }
-                R.id.listenModeButton -> {
-                    playerMode = PlayerMode.LISTEN
-                    Preferences.savePlayerMode(requireContext(), playerMode)
-                    selectDefaultReciter(playerMode)
-                    binding.audioModeGroup.isVisible = false
-                    binding.reciterDropdownLayout.isVisible = true
-                }
-            }
-        }
-
-        binding.reciterDropdown.setOnItemClickListener { parent, _, position, _ ->
+        binding.audioControlLayout.reciterDropdown.setOnItemClickListener { parent, _, position, _ ->
             selectedReciter = parent.getItemAtPosition(position) as Reciter
         }
 
         binding.nextButton.setOnClickListener {
-            viewModel.nextWord()
+            goToNextWord()
         }
 
         binding.previousButton.setOnClickListener {
+            goToPreviousWord()
+        }
+    }
+
+    private fun goToNextWord() {
+        animateWord(+1) {
+            viewModel.nextWord()
+        }
+    }
+
+    private fun goToPreviousWord() {
+        animateWord(-1) {
             viewModel.previousWord()
+        }
+    }
+
+    private fun setupStudyMode() {
+        with (binding.audioControlLayout) {
+            modeGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+                if (!isChecked) return@addOnButtonCheckedListener
+
+                when (checkedId) {
+                    R.id.studyModeButton -> {
+                        playerMode = PlayerMode.PRACTICE
+                        Preferences.savePlayerMode(requireContext(), playerMode)
+                        selectDefaultReciter(playerMode)
+                        audioModeGroup.isVisible = true
+                        reciterDropdownLayout.isVisible = false
+                    }
+
+                    R.id.listenModeButton -> {
+                        playerMode = PlayerMode.LISTEN
+                        Preferences.savePlayerMode(requireContext(), playerMode)
+                        selectDefaultReciter(playerMode)
+                        audioModeGroup.isVisible = false
+                        reciterDropdownLayout.isVisible = true
+                    }
+                }
+            }
         }
     }
 
     private fun setupTracker() {
         binding.taskProgressLayout.renderState(progressTracker.state, animate = false)
-        binding.root.setOnClickListener {
+        binding.taskProgressLayout.root.setOnClickListener {
             val wasPhase1Complete = progressTracker.state.isPhase1Complete
             val newState = progressTracker.registerTap()
             binding.taskProgressLayout.renderState(newState, animate = true)
@@ -180,7 +229,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
     }
 
     private fun initUi() {
-        binding.playLoop.setOnCheckedChangeListener { _, isChecked ->
+        binding.audioControlLayout.playLoop.setOnCheckedChangeListener { _, isChecked ->
             AudioPlayer.setSingleLoop(isChecked)
         }
 
@@ -192,18 +241,22 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
     private fun initializePlaybackSpeed() {
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, PlaybackSpeed.values())
-        binding.playbackSpeedDropdown.setAdapter(adapter)
-        binding.playbackSpeedDropdown.setText(selectedPlaybackSpeed.label, false)
-        binding.playbackSpeedDropdown.setOnItemClickListener { parent, _, position, _ ->
-            selectedPlaybackSpeed = parent.getItemAtPosition(position) as PlaybackSpeed
-            AudioPlayer.setSpeed(selectedPlaybackSpeed.value)
+        with(binding.audioControlLayout.playbackSpeedDropdown) {
+            setAdapter(adapter)
+            setText(selectedPlaybackSpeed.label, false)
+            setOnItemClickListener { parent, _, position, _ ->
+                selectedPlaybackSpeed = parent.getItemAtPosition(position) as PlaybackSpeed
+                AudioPlayer.setSpeed(selectedPlaybackSpeed.value)
+            }
         }
     }
 
     private fun initializeReciters() {
         val adapter = ReciterAdapter(requireContext(), Reciters.RECITERS_ONLY)
-        binding.reciterDropdown.setAdapter(adapter)
-        binding.reciterDropdown.setText(selectedReciter.name, false)
+        with(binding.audioControlLayout.reciterDropdown) {
+            setAdapter(adapter)
+            setText(selectedReciter.name, false)
+        }
     }
 
     private fun showDeleteDialog() {
@@ -222,20 +275,14 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
     private fun editLayoutControl() {
         binding.apply {
-            deleteButton.isVisible = editHide
-            editButton.isVisible = editHide
-            if (editHide) {
-                navigationButton.setBackgroundResource(R.drawable.expand_less)
-            } else {
-                navigationButton.setBackgroundResource(R.drawable.expand_more)
-            }
+            binding.bottomBar.setExpanded(editHide)
         }
         editHide = !editHide
     }
 
     private fun initPlayerMode() {
         playerMode = Preferences.getPlayerMode(requireContext())
-        binding.modeGroup.check(
+        binding.audioControlLayout.modeGroup.check(
             when (playerMode) {
                 PlayerMode.PRACTICE -> R.id.studyModeButton
                 PlayerMode.LISTEN -> R.id.listenModeButton
@@ -274,6 +321,21 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
     private fun updateNavigationButtons() {
         binding.previousButton.isEnabled = viewModel.hasPrevious
         binding.nextButton.isEnabled = viewModel.hasNext
-        binding.positionText.text = "${viewModel.position} / ${viewModel.total}"
+        binding.bottomBar.setPosition(viewModel.position, viewModel.total)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupSwipe() {
+        binding.contentContainer.setOnTouchListener(
+            object : OnSwipeTouchListener(requireContext()) {
+                override fun onSwipeLeft() {
+                    goToNextWord()
+                }
+
+                override fun onSwipeRight() {
+                    goToPreviousWord()
+                }
+            }
+        )
     }
 }
