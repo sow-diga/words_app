@@ -5,7 +5,9 @@ import com.mas.quranwords.models.TaskProgressState
 
 fun LayoutTaskProgressBinding.renderState(state: TaskProgressState, animate: Boolean) {
     // 1. Progress indicators
+    listenProgressIndicator.max = state.maxListen
     listenProgressIndicator.setProgress(state.listenCount, animate)
+    repeatProgressIndicator.max = state.maxRepeat
     repeatProgressIndicator.setProgress(state.repeatCount, animate)
 
     // 2. Text counts

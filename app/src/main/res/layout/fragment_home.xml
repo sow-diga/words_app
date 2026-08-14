@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     android:padding="20dp">
 
+    <ImageButton
+        android:id="@+id/settingsButton"
+        android:layout_width="@dimen/icon_size_medium_large"
+        android:layout_height="@dimen/icon_size_medium_large"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/settings_title"
+        android:padding="@dimen/padding_main"
+        android:src="@drawable/ic_settings"
+        app:tint="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!-- Title -->
     <TextView
         android:id="@+id/titleText"

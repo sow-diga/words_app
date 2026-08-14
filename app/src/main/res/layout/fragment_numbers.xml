@@ -1,112 +1,209 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:orientation="vertical"
-    android:background="#F4F4F5">
+    android:fillViewport="true"
+    android:background="@color/background">
 
-
-    <!-- MODE SELECT -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select Learning Mode"
-        android:textColor="@color/on_primary_container"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:padding="8dp"/>
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <RadioGroup
-        android:id="@+id/modeGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <RadioButton
-            android:id="@+id/easyMode"
-            android:layout_width="wrap_content"
+        <!-- Learning Mode -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/on_primary_container"
-            android:text="Easy"/>
+            app:cardBackgroundColor="@color/card_background"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp">
 
-        <RadioButton
-            android:id="@+id/mediumMode"
-            android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/numbers_select_learning_mode"
+                    android:textColor="@color/on_primary_container"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp"/>
+
+                <RadioGroup
+                    android:id="@+id/modeGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <RadioButton
+                        android:id="@+id/easyMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/numbers_easy"
+                        android:textColor="@color/on_primary_container"/>
+
+                    <RadioButton
+                        android:id="@+id/mediumMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/numbers_medium"
+                        android:textColor="@color/on_primary_container"
+                        android:checked="true"/>
+
+                    <RadioButton
+                        android:id="@+id/hardMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/numbers_hard"
+                        android:textColor="@color/on_primary_container"/>
+
+                </RadioGroup>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <!-- Question Controls -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Medium"
-            android:textColor="@color/on_primary_container"
-            android:checked="true"/>
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/card_background"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp">
 
-        <RadioButton
-            android:id="@+id/hardMode"
-            android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- New / Repeat -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/newBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:text="@string/numbers_new"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/repeatBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:text="@string/numbers_repeat"/>
+
+                </LinearLayout>
+
+
+                <!-- Answer -->
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:hintEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/answerInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/numbers_enter_number"
+                        android:inputType="number"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:textSize="24sp"
+                        android:gravity="center"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <!-- Check -->
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/checkBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/numbers_check_answer"/>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <!-- Score -->
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/on_primary_container"
-            android:text="Hard"/>
-    </RadioGroup>
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/card_background"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp">
 
-    <!-- NEW / REPEAT -->
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/newBtn"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/scoreText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/primary"
+                android:padding="16dp"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <!-- Feedback -->
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/feedbackCard"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="5dp"
-            android:text="New 🔊"/>
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/card_background"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp">
 
-        <Button
-            android:id="@+id/repeatBtn"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:padding="16dp"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <!-- New Session -->
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/newSessionBtn"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="5dp"
-            android:text="Repeat 🔄"/>
+            android:layout_marginTop="16dp"
+            android:text="@string/numbers_new_session"
+            android:visibility="gone"/>
+    </LinearLayout>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-    <!-- INPUT -->
-    <EditText
-        android:id="@+id/answerInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter number"
-        android:inputType="number"
-        android:imeOptions="actionDone"
-        android:singleLine="true"
-        android:textSize="24sp"
-        android:gravity="center"
-        android:layout_marginTop="12dp"/>
-
-    <!-- CHECK -->
-    <Button
-        android:id="@+id/checkBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="5dp"
-        android:text="Check Answer ✓"/>
-    <TextView
-        android:id="@+id/scoreText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Score: 0 | Streak: 0"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:textColor="@color/grey"
-        android:padding="8dp"/>
-    <!-- FEEDBACK -->
-    <TextView
-        android:id="@+id/feedback"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:padding="12dp"
-        android:visibility="gone"/>
-
-</LinearLayout>
+</ScrollView>

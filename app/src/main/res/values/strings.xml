@@ -15,5 +15,29 @@
         <item quantity="other">%d words</item>
     </plurals>
 
+    // Numbers
+    <string name="numbers_select_learning_mode">Select Learning Mode</string>
+    <string name="numbers_easy">Easy</string>
+    <string name="numbers_medium">Medium</string>
+    <string name="numbers_hard">Hard</string>
+    <string name="numbers_new">New 🔊</string>
+    <string name="numbers_repeat">Repeat 🔄</string>
+    <string name="numbers_enter_number">Enter number</string>
+    <string name="numbers_check_answer">Check Answer ✓</string>
+    <string name="numbers_score">Score: %1$d | Streak: %2$d</string>
+    <string name="numbers_question_score_streak">Question: %1$d / %2$d | Score: %3$d | Streak: %4$d</string>
+    <string name="numbers_correct">✓ Correct!</string>
+    <string name="numbers_incorrect">✗ Incorrect. Try again!</string>
+    <string name="numbers_session_complete">🎉 Session complete!\nScore: %1$d / %2$d\nAccuracy: %3$d%%</string>
+    <string name="numbers_new_session">New Session</string>
+
+    // Settings
+    <string name="settings_title">Settings</string>
+    <string name="settings_practice">Practice</string>
+    <string name="settings_max_listen">Maximum listens</string>
+    <string name="settings_max_repeat">Maximum repeats</string>
+    <string name="settings_numbers">Numbers</string>
+    <string name="settings_numbers_session_size">Questions per session</string>
+
 
 </resources>

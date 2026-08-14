@@ -35,16 +35,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupNavigation() {
-        binding.wordsCard.setOnClickListener {
-            findNavController().navigate(R.id.wordListFragment)
-        }
+        with(binding) {
+            wordsCard.setOnClickListener {
+                findNavController().navigate(R.id.wordListFragment)
+            }
 
-        binding.numbersCard.setOnClickListener {
-            findNavController().navigate(R.id.numbersFragment)
-        }
+            numbersCard.setOnClickListener {
+                findNavController().navigate(R.id.numbersFragment)
+            }
 
-        // Coming soon
-        binding.reviewCard.isEnabled = false
+            settingsButton.setOnClickListener {
+                findNavController().navigate(R.id.settingsFragment)
+            }
+
+            // Coming soon
+            reviewCard.isEnabled = false
+        }
     }
 
     private fun observeWordCount() {

@@ -23,6 +23,7 @@ import com.mas.quranwords.domain.extensions.showIfNotBlank
 import com.mas.quranwords.domain.filter.WordFilter
 import com.mas.quranwords.models.PlayerMode
 import com.mas.quranwords.navigation.NavigationArgs
+import com.mas.quranwords.data.settings.SettingsRepository
 import com.mas.quranwords.player.AudioPlayer
 import com.mas.quranwords.qari.Reciter
 import com.mas.quranwords.qari.Reciters
@@ -33,6 +34,7 @@ import com.mas.quranwords.util.Preferences
 import com.mas.quranwords.util.TaskProgressTracker
 import com.mas.quranwords.util.UrlBuilder
 import com.mas.quranwords.util.triggerSuccessVibration
+import kotlinx.coroutines.flow.first
 
 class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
     private var _binding: FragmentLocalDetailBinding? = null
@@ -56,7 +58,10 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
     private var currentWord: WordRecord? = null
     private var selectedPlaybackSpeed = PlaybackSpeed.NORMAL
     private var editHide = false
-    private val progressTracker = TaskProgressTracker(maxListen = 5, maxRepeat = 10)
+    private lateinit var progressTracker: TaskProgressTracker
+    private val settingsRepository by lazy {
+        SettingsRepository(requireContext())
+    }
     private var selectedReciter = Reciters.RECITERS_ONLY.first()
     private var playerMode = PlayerMode.PRACTICE
 
@@ -71,7 +76,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
 
         setupButtons()
         setupStudyMode()
-        setupTracker()
+        initTracker()
         setupSwipe()
         initUi()
     }
@@ -207,6 +212,20 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
                     }
                 }
             }
+        }
+    }
+
+    private fun initTracker() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val maxListen = settingsRepository.maxListen.first()
+            val maxRepeat = settingsRepository.maxRepeat.first()
+
+            progressTracker = TaskProgressTracker(
+                maxListen = maxListen,
+                maxRepeat = maxRepeat
+            )
+
+            setupTracker()
         }
     }
 
