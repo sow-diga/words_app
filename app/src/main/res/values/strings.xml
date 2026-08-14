@@ -38,6 +38,10 @@
     <string name="settings_max_repeat">Maximum repeats</string>
     <string name="settings_numbers">Numbers</string>
     <string name="settings_numbers_session_size">Questions per session</string>
+    <string name="settings_practice_reciters">Practice Reciters</string>
+    <string name="settings_practice_reciters_description">Choose the two reciters used during practice.</string>
+    <string name="settings_practice_reciter_1">Reciter 1</string>
+    <string name="settings_practice_reciter_2">Reciter 2</string>
 
 
 </resources>

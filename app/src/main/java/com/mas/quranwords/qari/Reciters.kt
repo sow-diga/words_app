@@ -23,4 +23,8 @@ object Reciters {
         AYMAN_SUWAID,
         HUSARY
     )
+
+    fun findByFolder(folder: String?): Reciter {
+        return ALL.firstOrNull { it.folder == folder } ?: AYMAN_SUWAID
+    }
 }

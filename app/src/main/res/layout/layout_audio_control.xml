@@ -65,14 +65,14 @@
                 android:text="Word" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/suwaidButton"
+                android:id="@+id/practiceReciter1Button"
                 style="@style/QuranWords.ToggleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Suwaid" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/husaryButton"
+                android:id="@+id/practiceReciter2Button"
                 style="@style/QuranWords.ToggleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

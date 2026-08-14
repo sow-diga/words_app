@@ -13,6 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mas.quranwords.R
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import com.mas.quranwords.audio.PlaybackSpeed
 import com.mas.quranwords.data.QuranRepository
@@ -62,6 +63,9 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
     private val settingsRepository by lazy {
         SettingsRepository(requireContext())
     }
+    private var practiceReciter1: Reciter = Reciters.AYMAN_SUWAID
+    private var practiceReciter2: Reciter = Reciters.HUSARY
+
     private var selectedReciter = Reciters.RECITERS_ONLY.first()
     private var playerMode = PlayerMode.PRACTICE
 
@@ -79,6 +83,7 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
         initTracker()
         setupSwipe()
         initUi()
+        loadPracticeReciters()
     }
 
     private fun loadWord() {
@@ -148,9 +153,9 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
             if (!isChecked) return@addOnButtonCheckedListener
             selectedReciter = when (checkedId) {
                 R.id.wordAudioButton -> Reciters.WORD_ONLY
-                R.id.suwaidButton -> Reciters.AYMAN_SUWAID
-                R.id.husaryButton -> Reciters.HUSARY
-                else -> Reciters.WORD_ONLY
+                R.id.practiceReciter1Button  -> practiceReciter1
+                R.id.practiceReciter2Button  -> practiceReciter2
+                else -> practiceReciter1
             }
         }
 
@@ -198,7 +203,9 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
                     R.id.studyModeButton -> {
                         playerMode = PlayerMode.PRACTICE
                         Preferences.savePlayerMode(requireContext(), playerMode)
-                        selectDefaultReciter(playerMode)
+
+                        selectedReciter = practiceReciter1
+
                         audioModeGroup.isVisible = true
                         reciterDropdownLayout.isVisible = false
                     }
@@ -271,11 +278,35 @@ class LocalDetailFragment : Fragment(R.layout.fragment_local_detail) {
         }
     }
 
+    private fun loadPracticeReciters() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val settings = combine(
+                settingsRepository.practiceReciter1,
+                settingsRepository.practiceReciter2
+            ) { reciter1, reciter2 ->
+                reciter1 to reciter2
+            }.first()
+
+            practiceReciter1 = Reciters.findByFolder(settings.first)
+            practiceReciter2 = Reciters.findByFolder(settings.second)
+
+            updatePracticeReciterButtons()
+            selectDefaultReciter(playerMode)
+        }
+    }
+
     private fun initializeReciters() {
         val adapter = ReciterAdapter(requireContext(), Reciters.RECITERS_ONLY)
         with(binding.audioControlLayout.reciterDropdown) {
             setAdapter(adapter)
             setText(selectedReciter.name, false)
+        }
+    }
+
+    private fun updatePracticeReciterButtons() {
+        binding.audioControlLayout.apply {
+            practiceReciter1Button.text = practiceReciter1.name
+            practiceReciter2Button.text = practiceReciter2.name
         }
     }
 
